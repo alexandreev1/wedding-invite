@@ -3,12 +3,16 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+// Если мы внутри Docker, хост будет 'db', если на ПК — 'localhost'
+const dbHost = process.env.IS_DOCKER ? 'db' : 'localhost';
+const dbUrl = `postgresql://user:password@${dbHost}:5432/wedding_db`;
+
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    url: dbUrl,
   },
 });

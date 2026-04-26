@@ -1,9 +1,11 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import type { IGuest, IInvitation } from '../types/wedding';
+import { api } from '../shared/api';
 
 interface WeddingState {
     invitations: IInvitation[];
+
+    fetchInvitations: () => Promise<void>;
 
     getAllGuests: () => IGuest[];
 
@@ -21,55 +23,60 @@ interface WeddingState {
     resetStore: () => void;
 }
 
-export const useWeddingStore = create<WeddingState>()(
-    persist(
-        (set, get) => ({
-            guests: [], // Начинаем с пустого списка
-            invitations: [],
+export const useWeddingStore = create<WeddingState>((set, get) => ({
+    invitations: [],
 
-            getAllGuests: () => {
-                return get().invitations.flatMap(invite => invite.guests);
-            },
+    // Загрузка данных из БД при старте приложения
+    fetchInvitations: async () => {
+        const res = await api.get('/invitations');
+        set({ invitations: res.data });
+    },
 
-            updateGuestSeat: (guestId, tableId, seatNumber) => set((state) => ({
-                invitations: state.invitations.map(invite => ({
-                    ...invite,
-                    guests: invite.guests.map(guest =>
-                        guest.id === guestId ? { ...guest, tableId, seatNumber } : guest
-                    )
-                }))
-            })),
+    addInvitation: async (newInvite) => {
+        // 1. Отправляем на сервер
+        const res = await api.post('/invitations', newInvite);
+        // 2. Обновляем локальный стейт
+        set((state) => ({
+            invitations: [...state.invitations, res.data]
+        }));
+    },
 
-            removeGuestFromTable: (guestId) => set((state) => ({
-                invitations: state.invitations.map(invite => ({
-                    ...invite,
-                    guests: invite.guests.map(guest =>
-                        guest.id === guestId ? { ...guest, tableId: null, seatNumber: null } : guest
-                    )
-                }))
-            })),
+    //TODO: Переписать остальные функции на апи, уточнить по поводу getAllGuests
 
-            addInvitation: (invitation) => set((state) => ({
-                invitations: [...state.invitations, invitation]
-            })),
+    getAllGuests: () => {
+        return get().invitations.flatMap(invite => invite.guests);
+    },
 
-            removeInvitation: (id) => set((state) => ({
-                invitations: state.invitations.filter(inv => inv.id !== id)
-            })),
+    updateGuestSeat: (guestId, tableId, seatNumber) => set((state) => ({
+        invitations: state.invitations.map(invite => ({
+            ...invite,
+            guests: invite.guests.map(guest =>
+                guest.id === guestId ? { ...guest, tableId, seatNumber } : guest
+            )
+        }))
+    })),
 
-            updateRSVP: (guestId, status) => set((state) => ({
-                invitations: state.invitations.map(invite => ({
-                    ...invite,
-                    guests: invite.guests.map(guest =>
-                        guest.id === guestId ? { ...guest, isRSVP: status } : guest
-                    )
-                }))
-            })),
+    removeGuestFromTable: (guestId) => set((state) => ({
+        invitations: state.invitations.map(invite => ({
+            ...invite,
+            guests: invite.guests.map(guest =>
+                guest.id === guestId ? { ...guest, tableId: null, seatNumber: null } : guest
+            )
+        }))
+    })),
 
-            resetStore: () => set({ invitations: [] }),
-        }),
-        {
-            name: 'wedding-storage', // Ключ в localStorage
-        }
-    )
-);
+    removeInvitation: (id) => set((state) => ({
+        invitations: state.invitations.filter(inv => inv.id !== id)
+    })),
+
+    updateRSVP: (guestId, status) => set((state) => ({
+        invitations: state.invitations.map(invite => ({
+            ...invite,
+            guests: invite.guests.map(guest =>
+                guest.id === guestId ? { ...guest, isRSVP: status } : guest
+            )
+        }))
+    })),
+
+    resetStore: () => set({ invitations: [] }),
+}));
