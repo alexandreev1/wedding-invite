@@ -21,24 +21,43 @@ interface WeddingState {
     updateRSVP: (guestId: string, status: boolean) => void;
 
     resetStore: () => void;
+    isLoading: boolean;
+    isAdmin: boolean;
 }
 
 export const useWeddingStore = create<WeddingState>((set, get) => ({
     invitations: [],
+    isLoading: false,
+    isAdmin: false,
 
     // Загрузка данных из БД при старте приложения
     fetchInvitations: async () => {
-        const res = await api.get('/invitations');
-        set({ invitations: res.data });
+        set({ isLoading: true });
+        try {
+            const res = await api.get('/invitations');
+            // Мы полностью перезаписываем стор данными из БД
+            set({ invitations: res.data, isAdmin: true });
+        } catch (error) {
+            set({ isAdmin: false });
+            console.error("Ошибка синхронизации:", error);
+        } finally {
+            set({ isLoading: false });
+        }
     },
 
     addInvitation: async (newInvite) => {
-        // 1. Отправляем на сервер
-        const res = await api.post('/invitations', newInvite);
-        // 2. Обновляем локальный стейт
-        set((state) => ({
-            invitations: [...state.invitations, res.data]
-        }));
+        set({ isLoading: true });
+        try {
+            // 1. Отправляем на сервер
+            await api.post('/invitations', newInvite);
+            // 2. Обновляем локальный стейт
+            await get().fetchInvitations();
+        } catch (error) {
+            alert("Не добавить приглашение. Данные будут откачены.");
+            await get().fetchInvitations(); // Откатываем UI к состоянию базы
+        } finally {
+            set({ isLoading: false });
+        }
     },
 
     //TODO: Переписать остальные функции на апи, уточнить по поводу getAllGuests
@@ -47,27 +66,50 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
         return get().invitations.flatMap(invite => invite.guests);
     },
 
-    updateGuestSeat: (guestId, tableId, seatNumber) => set((state) => ({
-        invitations: state.invitations.map(invite => ({
-            ...invite,
-            guests: invite.guests.map(guest =>
-                guest.id === guestId ? { ...guest, tableId, seatNumber } : guest
-            )
-        }))
-    })),
+    updateGuestSeat: async (guestId, tableId, seatNumber) => {
+        set({ isLoading: true });
+        try {
+            // 1. Отправляем запрос
+            await api.patch(`/guests/${guestId}`, { tableId, seatNumber });
 
-    removeGuestFromTable: (guestId) => set((state) => ({
-        invitations: state.invitations.map(invite => ({
-            ...invite,
-            guests: invite.guests.map(guest =>
-                guest.id === guestId ? { ...guest, tableId: null, seatNumber: null } : guest
-            )
-        }))
-    })),
+            // 2. Вместо ручного поиска в массиве просто перекачиваем данные из БД
+            // get() — это функция Zustand для доступа к методам внутри стора
+            await get().fetchInvitations();
 
-    removeInvitation: (id) => set((state) => ({
-        invitations: state.invitations.filter(inv => inv.id !== id)
-    })),
+        } catch (error) {
+            alert("Не удалось добавить гостя на стол. Данные будут откачены.");
+            await get().fetchInvitations(); // Откатываем UI к состоянию базы
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    removeGuestFromTable: async (guestId) => {
+        set({ isLoading: true });
+        try {
+            await api.patch(`/guests/${guestId}`, { tableId: null, seatNumber: null });
+            await get().fetchInvitations();
+        } catch (error) {
+            alert("Не удалось удалить гостя со стола. Данные будут откачены.");
+            await get().fetchInvitations(); // Откатываем UI к состоянию базы
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    removeInvitation: async (id: string) => {
+        set({ isLoading: true });
+        try {
+            await api.delete(`/invitations/${id}`);
+            await get().fetchInvitations();
+
+        } catch (error) {
+            alert("Не удалось удалить гостя со стола. Данные будут откачены.");
+            await get().fetchInvitations(); // Откатываем UI к состоянию базы
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 
     updateRSVP: (guestId, status) => set((state) => ({
         invitations: state.invitations.map(invite => ({

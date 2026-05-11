@@ -1,0 +1,36 @@
+# --- Зависимости ---
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# --- Секреты и конфиги ---
+.env
+backend/.env
+# Игнорируем sqlite, если будешь использовать для тестов
+backend/prisma/*.db
+backend/prisma/*.db-journal
+
+# --- Сборка и логи ---
+dist/
+backend/dist/
+frontend/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+
+# --- Docker ---
+# Обычно данные БД в вольюмах не попадают в git, но на всякий случай:
+docker/db_data/
+
+# --- IDE и системные файлы ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.local
+*.swp
+
+# --- Prisma ---
+# Миграции лучше хранить в Git, но сгенерированный клиент — нет
+backend/node_modules/@prisma/client

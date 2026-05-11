@@ -20,6 +20,6 @@ model Guest {
   avatarUrl    String
   tableId      Int?
   seatNumber   Int?
-  invitation   Invitation @relation(fields: [invitationId], references: [id])
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
   invitationId String
 }

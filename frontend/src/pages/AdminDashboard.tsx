@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { DndContext, type DragEndEvent, type DragStartEvent, DragOverlay } from '@dnd-kit/core';
+import { useShallow } from 'zustand/shallow';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { DraggableGuest } from '../components/DraggableGuest';
 import { DroppableTable } from '../components/DroppableTable';
@@ -9,14 +10,15 @@ import { TABLES } from '../shared/constants';
 import type { IGuest, ITable } from '../types/wedding';
 
 const AdminDashboard = () => {
-    const { updateGuestSeat, removeGuestFromTable, resetStore, getAllGuests } = useWeddingStore();
+    const { updateGuestSeat, removeGuestFromTable, resetStore, fetchInvitations } = useWeddingStore();
 
     const [activeId, setActiveId] = useState<string | null>(null);
     const [selectedTableForSeating, setSelectedTableForSeating] = useState<number | null>(null);
     const [tableEditing, setTableEditing] = useState(false);
 
-    const allGuests = getAllGuests();
-
+    const allGuests = useWeddingStore(
+        useShallow((state) => state.invitations.flatMap(i => i.guests))
+    );
     const handleDragStart = (event: DragStartEvent) => {
         setActiveId(event.active.id as string);
     };
@@ -68,6 +70,12 @@ const AdminDashboard = () => {
     };
 
     const activeGuest = allGuests.find(g => g.id === activeId);
+
+
+
+    useEffect(() => {
+        fetchInvitations();
+    }, [fetchInvitations]);
 
     return (
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>

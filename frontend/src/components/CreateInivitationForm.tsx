@@ -4,7 +4,7 @@ import { useWeddingStore } from "../store/useWeddingStore";
 import { generateToken, getAvatarUrl } from "../shared/utils";
 
 function CreateInvitationForm() {
-    const { addInvitation } = useWeddingStore();
+    const { addInvitation, isLoading } = useWeddingStore();
     const [isPair, setIsPair] = useState(false);
     const [guest1, setGuest1] = useState({ name: '', gender: 'male' as TGender, photo: '' });
     const [guest2, setGuest2] = useState({ name: '', gender: 'female' as TGender, photo: '' });
@@ -114,7 +114,7 @@ function CreateInvitationForm() {
                 </div>
             )}
 
-            <button type="submit" className="w-full py-2 bg-stone-800 text-white rounded text-sm font-bold hover:bg-stone-700">
+            <button type="submit" className="w-full py-2 bg-stone-800 text-white rounded text-sm font-bold hover:bg-stone-700" disabled={isLoading}>
                 Создать приглашение
             </button>
         </form>

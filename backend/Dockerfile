@@ -11,6 +11,10 @@ COPY package*.json ./
 # 4. Устанавливаем зависимости
 RUN npm install
 
+# Копируем папку prisma ПЕРЕД генерацией
+COPY prisma ./prisma/
+RUN npx prisma generate
+
 # 5. Копируем все остальные файлы проекта (код, конфиги)
 COPY . .
 
