@@ -8,18 +8,20 @@ interface ITableEditorProps {
     activeGuestId?: string;
     onGuestClickHandler: (guest: IGuest) => void;
     onEmptySeatClickHandler: (tableId: number, seat: number, guest?: IGuest) => void;
-    onCloseHandler: () => void;
 }
 
 function TableEditor(props: ITableEditorProps) {
-    const { tableId, activeGuestId, onGuestClickHandler, onEmptySeatClickHandler, onCloseHandler } = props;
+    const { tableId, activeGuestId, onGuestClickHandler, onEmptySeatClickHandler } = props;
     const { getAllGuests } = useWeddingStore();
     const allGuests = getAllGuests();
 
     const currTable = useMemo(() => TABLES.find((t) => t.id === tableId), [tableId]);
-    if (!currTable || !tableId) return null;
 
     const activeGuest = useMemo(() => allGuests.find((g) => g.id === activeGuestId), [activeGuestId]);
+
+    if (!currTable || !tableId) {
+        return null
+    };
 
     // Функция отрисовки кнопки места
     const SeatButton = ({ seatNum }: { seatNum: number }) => {

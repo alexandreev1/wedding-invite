@@ -30,17 +30,18 @@ services:
       - IS_DOCKER=true
     depends_on:
       - db
-
   # Фронтенд
-  frontend:
-    build: ./frontend
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - VITE_API_URL=http://localhost:3000
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: ./frontend/Dockerfile
+  #   ports:
+  #     - "5173:5173"
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #   environment:
+  #     - VITE_API_URL=http://localhost:3000
 
 volumes:
   db_data:

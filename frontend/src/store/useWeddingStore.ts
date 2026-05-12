@@ -10,12 +10,12 @@ interface WeddingState {
     getAllGuests: () => IGuest[];
 
     // Экшены для управления гостями
-    addInvitation: (invitation: IInvitation) => void;
-    removeInvitation: (id: string) => void;
+    addInvitation: (invitation: IInvitation) => Promise<void>;
+    removeInvitation: (id: string) => Promise<void>;
 
     // Экшены для рассадки
-    updateGuestSeat: (guestId: string | null, tableId: number | null, seatNumber: number | null) => void;
-    removeGuestFromTable: (guestId: string) => void;
+    updateGuestSeat: (guestId: string | null, tableId: number | null, seatNumber: number | null) => Promise<void>;
+    removeGuestFromTable: (guestId: string) => Promise<void>;
 
     // Экшен для RSVP (со стороны гостя)
     updateRSVP: (guestId: string, status: boolean) => void;

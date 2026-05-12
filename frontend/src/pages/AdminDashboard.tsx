@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { DndContext, type DragEndEvent, type DragStartEvent, DragOverlay } from '@dnd-kit/core';
 import { useShallow } from 'zustand/shallow';
+import { Modal } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { modals } from '@mantine/modals';
 import { useWeddingStore } from '../store/useWeddingStore';
 import { DraggableGuest } from '../components/DraggableGuest';
 import { DroppableTable } from '../components/DroppableTable';
@@ -14,7 +17,7 @@ const AdminDashboard = () => {
 
     const [activeId, setActiveId] = useState<string | null>(null);
     const [selectedTableForSeating, setSelectedTableForSeating] = useState<number | null>(null);
-    const [tableEditing, setTableEditing] = useState(false);
+    const [tableEditing, { open: openTable, close: closeTable }] = useDisclosure(false);
 
     const allGuests = useWeddingStore(
         useShallow((state) => state.invitations.flatMap(i => i.guests))
@@ -23,44 +26,42 @@ const AdminDashboard = () => {
         setActiveId(event.active.id as string);
     };
 
-    const handleDragEnd = (event: DragEndEvent) => {
+    const handleDragEnd = async (event: DragEndEvent) => {
         const { over, active } = event;
         const guestId = active.id as string;
 
         if (over) {
             const tableId = over.data.current?.tableId;
-            setTableEditing(true);
+            openTable();
             setSelectedTableForSeating(tableId);
         } else {
-            updateGuestSeat(guestId, null, null);
+            await updateGuestSeat(guestId, null, null);
         }
     };
 
     const handleTableClick = useCallback((tableId: ITable['id']) => {
-        setTableEditing(true);
+        openTable();
         setSelectedTableForSeating(tableId);
     }, []);
 
-    const handleEmptySeatClick = useCallback((tableId: number, seat: number, guest?: IGuest) => {
-        updateGuestSeat(guest?.id || null, tableId, seat);
+    const handleEmptySeatClick = useCallback(async (tableId: number, seat: number, guest?: IGuest) => {
+        await updateGuestSeat(guest?.id || null, tableId, seat);
         setSelectedTableForSeating(null);
-        setTableEditing(false)
+        closeTable();
         setActiveId(null);
     }, []);
 
-    const handleGuestClick = useCallback((guest: IGuest) => {
-        if (window.confirm("Вернуть гостя в общий список?")) {
-            removeGuestFromTable(guest.id);
-        }
-        setSelectedTableForSeating(null);
-        setTableEditing(false)
-        setActiveId(null);
-    }, []);
-
-    const handleTableCloseClick = useCallback(() => {
-        setSelectedTableForSeating(null);
-        setTableEditing(false);
-        setActiveId(null);
+    const handleGuestClick = useCallback(async (guest: IGuest) => {
+        modals.openConfirmModal({
+            title: 'Вернуть гостя в общий список?',
+            labels: { confirm: 'Да', cancel: 'Отмена' },
+            onConfirm: async () => {
+                await removeGuestFromTable(guest.id)
+                setSelectedTableForSeating(null);
+                closeTable();
+                setActiveId(null);
+            },
+        })
     }, []);
 
     const handleFullReset = () => {
@@ -130,9 +131,9 @@ const AdminDashboard = () => {
                     ) : null}
                 </DragOverlay>
             </div>
-            {tableEditing && (
-                <TableEditor tableId={selectedTableForSeating} activeGuestId={activeGuest?.id} onGuestClickHandler={handleGuestClick} onEmptySeatClickHandler={handleEmptySeatClick} onCloseHandler={handleTableCloseClick} />
-            )}
+            <Modal opened={tableEditing} onClose={closeTable}>
+                <TableEditor tableId={selectedTableForSeating} activeGuestId={activeGuest?.id} onGuestClickHandler={handleGuestClick} onEmptySeatClickHandler={handleEmptySeatClick} />
+            </Modal>
         </DndContext>
     );
 };
