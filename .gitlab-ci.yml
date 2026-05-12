@@ -52,6 +52,17 @@ build-frontend-docker-image:
     - if: $IS_DEV
       when: never
 
+build-backend-docker-image:
+  extends: .build-docker
+  variables:
+    DOCKER: registry.exz-vps.ru/alexioll-group/wedding-invite/backend
+    DOCKER_FILE: ./backend/Dockerfile
+  rules:
+    - if: $IS_MAIN
+      when: always
+    - if: $IS_DEV
+      when: never
+
 # update-cluster-app:
 #   stage: publish
 #   needs:
