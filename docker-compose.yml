@@ -14,7 +14,9 @@ services:
 
   # Бэкенд
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
     env_file:
       - .env
     ports:
