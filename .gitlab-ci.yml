@@ -27,18 +27,19 @@ variables:
   DOCKER_FILE: ./Dockerfile
   DOCKER: registry.exz-vps.ru/alexioll-group/wedding-invite/frontend
 
-# build-job:
-#   image: node:20-alpine
-#   stage: build
-#   before_script:
-#     - npm ci --cache .npm --prefer-offline
-#   script:
-#     - export NODE_ENV=production
-#     - npm run build
-#   artifacts:
-#     paths:
-#       - .next/standalone
-#       - .next/static
+build-job:
+  image: node:20-alpine
+  stage: build
+  # before_script:
+  #   - npm ci --cache .npm --prefer-offline
+  script:
+    - echo 1
+    # - export NODE_ENV=production
+    # - npm run build
+  artifacts:
+    paths:
+      - .next/standalone
+      - .next/static
 
 build-frontend-docker-image:
   extends: .build-docker
