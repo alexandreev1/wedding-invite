@@ -1,0 +1,63 @@
+cache:
+  key: ${CI_COMMIT_BRANCH}
+  paths:
+    - .npm/
+    - .next/cache/
+
+stages:
+  - build
+  - deploy
+  - docker
+  - publish
+  - notify
+
+include:
+  - project: "utils/shared-ci"
+    file: "telegram-notify.yml"
+  - project: "utils/shared-ci"
+    file: "docker-build.yml"
+  - project: "utils/shared-ci"
+    file: "update-cluster.yml"
+
+variables:
+  NAMESPACE: ix-medical-app-frontend
+  NAMESPACE_DEV: $NAMESPACE-dev
+  CHART: medical-app-frontend-ix-chart
+  CHART_DEV: medical-app-frontend-dev-ix-chart
+  DOCKER_FILE: ./Dockerfile
+  DOCKER: registry.exz-vps.ru/alexioll-group/wedding-invite/frontend
+
+# build-job:
+#   image: node:20-alpine
+#   stage: build
+#   before_script:
+#     - npm ci --cache .npm --prefer-offline
+#   script:
+#     - export NODE_ENV=production
+#     - npm run build
+#   artifacts:
+#     paths:
+#       - .next/standalone
+#       - .next/static
+
+build-frontend-docker-image:
+  extends: .build-docker
+  variables:
+    DOCKER: registry.exz-vps.ru/alexioll-group/wedding-invite/frontend
+    DOCKER_FILE: ./frontend/Dockerfile
+  rules:
+    - if: $IS_MAIN
+      when: always
+    - if: $IS_DEV
+      when: never
+
+# update-cluster-app:
+#   stage: publish
+#   needs:
+#     - build-docker-image
+#   extends: .update-app
+#   rules:
+#     - if: $IS_MAIN
+#       when: always
+#     - if: $IS_DEV
+#       when: never
