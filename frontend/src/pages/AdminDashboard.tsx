@@ -97,18 +97,30 @@ const AdminDashboard = () => {
                         Полный сброс базы
                     </button>
                 </aside>
-
-                <main className="flex-1 p-10 flex gap-[148px] justify-center items-center">
-                    {TABLES.map(table => (
-                        <DroppableTable
-                            key={table.id}
-                            table={table}
-                            seatedGuests={allGuests.filter(g => g.tableId === table.id)}
-                            onClick={handleTableClick}
-                        />
-                    ))}
+                <main className="flex-1 p-10 flex flex-col items-center overflow-y-auto">
+                    {/* Статичный Президиум (для красоты) */}
+                    <div className="mb-20 p-6 bg-white border-b-4 border-yellow-500 shadow-sm text-center">
+                        <h2 className="font-serif text-2xl">ПРЕЗИДИУМ</h2>
+                        <div className="flex gap-10 mt-4">
+                            <div className="w-16 h-16 rounded-full border-2 border-yellow-200 flex items-center justify-center text-xs">Я</div>
+                            <div className="w-16 h-16 rounded-full border-2 border-yellow-200 flex items-center justify-center text-xs">Невеста</div>
+                        </div>
+                    </div>
+                    <div className="flex gap-32 h-fit">
+                        {/* Ряд А (Левый) */}
+                        <div className="flex flex-col gap-0 border-l-2 border-stone-100">
+                            {TABLES.filter(t => t.id <= 5).map(table => (
+                                <DroppableTable key={table.id} table={table} seatedGuests={allGuests.filter(g => g.tableId === table.id)} onClick={handleTableClick} />
+                            ))}
+                        </div>
+                        {/* Ряд Б (Правый) */}
+                        <div className="flex flex-col gap-0 border-r-2 border-stone-100">
+                            {TABLES.filter(t => t.id >= 6).map(table => (
+                                <DroppableTable key={table.id} table={table} seatedGuests={allGuests.filter(g => g.tableId === table.id)} onClick={handleTableClick} />
+                            ))}
+                        </div>
+                    </div>
                 </main>
-
                 <DragOverlay>
                     {activeId && activeGuest ? (
                         <div className="flex items-center gap-3 p-3 bg-white border-2 border-yellow-500 rounded-lg shadow-2xl scale-105 opacity-90 w-64">

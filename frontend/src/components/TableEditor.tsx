@@ -13,74 +13,67 @@ interface ITableEditorProps {
 
 function TableEditor(props: ITableEditorProps) {
     const { tableId, activeGuestId, onGuestClickHandler, onEmptySeatClickHandler, onCloseHandler } = props;
-
     const { getAllGuests } = useWeddingStore();
     const allGuests = getAllGuests();
 
-    const currTable = useMemo(() => {
-        return TABLES.find((table) => table.id === tableId);
-    }, [tableId]);
+    const currTable = useMemo(() => TABLES.find((t) => t.id === tableId), [tableId]);
+    if (!currTable || !tableId) return null;
 
-    if (!currTable || !tableId) {
-        return null;
-    }
+    const activeGuest = useMemo(() => allGuests.find((g) => g.id === activeGuestId), [activeGuestId]);
 
-    const activeGuest = useMemo(() => allGuests.find((guest) => guest.id === activeGuestId), [activeGuestId]);
+    // Функция отрисовки кнопки места
+    const SeatButton = ({ seatNum }: { seatNum: number }) => {
+        const guestAtSeat = allGuests.find(g => g.tableId === currTable.id && g.seatNumber === seatNum);
+
+        return !!guestAtSeat ? (
+            <button
+                disabled={!!activeGuestId}
+                onClick={() => onGuestClickHandler(guestAtSeat)}
+                className="w-20 h-20 rounded-full border-2 border-stone-200 bg-white shadow-md flex items-center justify-center transition-transform hover:scale-105"
+            >
+                <img src={guestAtSeat.avatarUrl} className="w-full h-full rounded-full object-cover" />
+            </button>
+        ) : (
+            <button
+                disabled={!activeGuestId}
+                onClick={() => onEmptySeatClickHandler(tableId, seatNum, activeGuest)}
+                className="w-20 h-20 rounded-full border-2 border-dashed border-stone-400 bg-stone-100/50 flex items-center justify-center transition-all hover:border-yellow-500 hover:bg-yellow-50 disabled:opacity-50"
+            >
+                <span className="text-[10px] text-stone-500 uppercase font-bold">Место {seatNum}</span>
+            </button>
+        );
+    };
 
     return (
-        <div className="fixed inset-0 bg-stone-900/90 backdrop-blur-md z-50 flex items-center justify-center">
-            <div className="relative p-20 bg-stone-50 rounded-full border-[12px] border-stone-200 shadow-2xl">
+        // Внутри TableEditor.tsx заменим разметку:
+        <div className="flex items-center gap-12">
+            {/* ЛЕВЫЙ РЯД (1 и 2 место) */}
+            <div className="flex flex-col gap-10">
+                <SeatButton seatNum={1} />
+                <SeatButton seatNum={2} />
+            </div>
 
-                {/* Кнопка закрытия */}
-                <button
-                    onClick={onCloseHandler}
-                    className="absolute -top-10 right-0 text-white hover:text-yellow-400 font-bold"
-                >
-                    ЗАКРЫТЬ
-                </button>
+            {/* СТОЛ (Вертикальный) */}
+            <div className="relative w-40 h-64 bg-white border-4 border-stone-200 rounded-xl flex items-center justify-center">
+                <h3 className="text-xl font-serif rotate-90 whitespace-nowrap">{currTable.name}</h3>
 
-                <div className="w-[400px] h-[400px] flex items-center justify-center relative">
-                    <h3 className="text-2xl font-serif text-stone-800">{currTable.name}</h3>
+                {/* ТОРЦЫ */}
+                {(currTable.id === 6) && (
+                    <div className="absolute -top-24 left-1/2 -translate-x-1/2">
+                        <SeatButton seatNum={5} />
+                    </div>
+                )}
+                {(currTable.id === 9) && (
+                    <div className="absolute -bottom-24 left-1/2 -translate-x-1/2">
+                        <SeatButton seatNum={5} />
+                    </div>
+                )}
+            </div>
 
-                    {[...Array(currTable.maxSeats)].map((_, i) => {
-                        const guestAtSeat = allGuests.find(
-                            g => g.tableId === currTable.id && g.seatNumber === i
-                        );
-
-                        return (
-                            !!guestAtSeat ? (
-                                <button
-                                    key={i}
-                                    disabled={!!activeGuestId}
-                                    onClick={() => onGuestClickHandler(guestAtSeat)}
-                                    className="absolute w-16 h-16 rounded-full border-2 transition-all flex items-center justify-center border-stone-200 opacity-100 bg-white"
-                                    style={{
-                                        top: `${50 - 60 * Math.cos(2 * Math.PI * i / currTable.maxSeats)}%`,
-                                        left: `${50 + 60 * Math.sin(2 * Math.PI * i / currTable.maxSeats)}%`,
-                                        transform: 'translate(-50%, -50%)'
-                                    }}
-                                >
-                                    <img src={guestAtSeat.avatarUrl} className="w-full h-full rounded-full object-cover" />
-                                </button>
-                            ) : (
-                                <button
-                                    key={i}
-                                    disabled={!activeGuestId}
-                                    onClick={() => onEmptySeatClickHandler(tableId, i, activeGuest)}
-                                    className="absolute w-16 h-16 rounded-full border-2 transition-all flex items-center justify-center
-                                border-dashed border-stone-400 hover:border-yellow-500 hover:scale-110 hover:bg-yellow-50"
-                                    style={{
-                                        top: `${50 - 60 * Math.cos(2 * Math.PI * i / currTable.maxSeats)}%`,
-                                        left: `${50 + 60 * Math.sin(2 * Math.PI * i / currTable.maxSeats)}%`,
-                                        transform: 'translate(-50%, -50%)'
-                                    }}
-                                >
-                                    <span className="text-stone-400 text-xs">Место {i + 1}</span>
-                                </button>
-                            )
-                        );
-                    })}
-                </div>
+            {/* ПРАВЫЙ РЯД (3 и 4 место) */}
+            <div className="flex flex-col gap-10">
+                <SeatButton seatNum={3} />
+                <SeatButton seatNum={4} />
             </div>
         </div>
     );
