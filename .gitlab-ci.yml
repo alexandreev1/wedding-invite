@@ -53,6 +53,8 @@ build-backend-docker-image:
 prisma-migrate:
   stage: migrate
   image: node:20-alpine
+  tags:
+    - truenas
   script:
     - cd backend
     - npm ci
