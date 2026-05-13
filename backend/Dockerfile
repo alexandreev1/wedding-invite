@@ -14,6 +14,7 @@ RUN npm install
 # Копируем папку prisma ПЕРЕД генерацией
 COPY ./backend/prisma ./prisma/
 RUN npx prisma generate
+RUN npx prisma migrate
 
 # 5. Копируем все остальные файлы проекта (код, конфиги)
 COPY ./backend .
