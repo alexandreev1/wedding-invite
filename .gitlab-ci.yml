@@ -8,6 +8,7 @@ stages:
   - build
   - deploy
   - docker
+  - migrate
   - publish
   - notify
 
@@ -48,6 +49,19 @@ build-backend-docker-image:
       when: always
     - if: $IS_DEV
       when: never
+
+prisma-migrate:
+  stage: migrate
+  image: node:20-alpine
+  script:
+    - cd backend
+    - npm ci
+    - npx prisma generate
+    - npx prisma migrate deploy
+  environment:
+    name: production
+  only:
+    - main
 
 update-cluster-app:
   stage: publish
