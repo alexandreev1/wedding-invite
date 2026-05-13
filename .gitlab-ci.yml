@@ -64,7 +64,7 @@ update-cluster-app:
   # before_script:
     # - docker login -u bustexz -p $DOCKER_PASSWORD
   script:
-    - docker compose pull
-    - docker compose up -d
+    - docker compose -f docker-compose.prod.yml pull
+    - docker compose -f docker-compose.prod.yml up -d
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
