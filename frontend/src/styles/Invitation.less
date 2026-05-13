@@ -12,20 +12,33 @@
       #510707 50%,
       #5d090b 81%
     );
-    height: 1180px;
+    // height: 1180px;
     display: flex;
     flex-direction: column;
     align-items: center;
     color: #fff;
     flex-shrink: 0;
+    gap: 30px;
+
+    @media (min-width: 768px) {
+      padding: 0 15%;
+    }
+
+    @media (min-width: 1080px) {
+      padding: 0 25%;
+    }
 
     &-title {
       font-size: 64px;
       padding: 46px 24px 0;
       position: relative;
 
-      &_sideSign {
-        color: #484040;
+      &-sideSign {
+        color: rgba(#484040, 25%);
+        @shadow-color: rgba(#ffffff, 51%);
+        text-shadow: 0 4px 4px @shadow-color;
+        mix-blend-mode: screen;
+
         position: absolute;
         right: -17px;
         top: 90px;
@@ -38,6 +51,56 @@
     &-newlyweds {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      gap: 40px;
+
+      &-names {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        @media (min-width: 768px) {
+          flex-direction: row;
+          align-items: baseline;
+        }
+
+        &-name {
+          font-size: 96px;
+          // TODO: Временно, убрать после установки шрифтов
+          font-style: italic;
+          letter-spacing: -10px;
+        }
+
+        &-ampersand {
+          font-size: 64px;
+          opacity: 43%;
+        }
+      }
+
+      &-date {
+        font-size: 36px;
+      }
+    }
+
+    &-mainInfo {
+      display: flex;
+      flex-direction: column;
+      background-color: #eee1e1;
+      height: 550px;
+      width: 100%;
+      flex-shrink: 0;
+      border-radius: 30px;
+
+      &-addressing {
+        display: flex;
+        flex-direction: column;
+
+        color: #000;
+        font-size: 64px;
+
+        // TODO: Временно, убрать после установки шрифтов
+        font-style: italic;
+      }
     }
   }
 }

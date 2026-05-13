@@ -33,13 +33,31 @@ const GuestInvite = () => {
       <div className="InvitationContent__header">
         <div className="InvitationContent__header-title">
           WEDDING
-          <span className="InvitationContent__header-title_sideSign">
+          <span className="InvitationContent__header-title-sideSign">
             she said yes
           </span>
         </div>
         <div className="InvitationContent__header-newlyweds">
-          <div></div>
-          <span></span>
+          <div className="InvitationContent__header-newlyweds-names">
+            <span className="InvitationContent__header-newlyweds-names-name">
+              Aleksandr
+            </span>
+            <span className="InvitationContent__header-newlyweds-names-ampersand">
+              &
+            </span>
+            <span className="InvitationContent__header-newlyweds-names-name">
+              Olga
+            </span>
+          </div>
+          <span className="InvitationContent__header-newlyweds-date">
+            11|07|2026
+          </span>
+        </div>
+        <div className="InvitationContent__header-mainInfo">
+          <div className="InvitationContent__header-mainInfo-addressing">
+            <span>Дорогие,</span>
+            <span>{guestNames}!</span>
+          </div>
         </div>
       </div>
     </div>
