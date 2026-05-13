@@ -27,22 +27,9 @@ variables:
   DOCKER_FILE: ./Dockerfile
   DOCKER: registry.exz-vps.ru/alexioll-group/wedding-invite/frontend
 
-build-job:
-  image: node:20-alpine
-  stage: build
-  # before_script:
-  #   - npm ci --cache .npm --prefer-offline
-  script:
-    - echo 1
-    # - export NODE_ENV=production
-    # - npm run build
-  artifacts:
-    paths:
-      - .next/standalone
-      - .next/static
-
 build-frontend-docker-image:
   extends: .build-docker
+  needs: []
   variables:
     DOCKER: registry.exz-vps.ru/alexioll-group/wedding-invite/frontend
     DOCKER_FILE: ./frontend/Dockerfile
@@ -54,6 +41,7 @@ build-frontend-docker-image:
 
 build-backend-docker-image:
   extends: .build-docker
+  needs: []
   variables:
     DOCKER: registry.exz-vps.ru/alexioll-group/wedding-invite/backend
     DOCKER_FILE: ./backend/Dockerfile
@@ -63,13 +51,18 @@ build-backend-docker-image:
     - if: $IS_DEV
       when: never
 
-# update-cluster-app:
-#   stage: publish
-#   needs:
-#     - build-docker-image
-#   extends: .update-app
-#   rules:
-#     - if: $IS_MAIN
-#       when: always
-#     - if: $IS_DEV
-#       when: never
+update-cluster-app:
+  stage: publish
+  image: docker:24.0.7
+  services:
+    - docker:dind
+  tags:
+    - truenas
+  needs:
+    - job: build-backend-docker-image
+    - job: build-frontend-docker-image
+  script:
+    - docker compose pull
+    - docker compose up -d
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
