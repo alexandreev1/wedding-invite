@@ -61,7 +61,7 @@ prisma-migrate:
   environment:
     name: production
   only:
-    - main
+    - master
 
 update-cluster-app:
   stage: publish
