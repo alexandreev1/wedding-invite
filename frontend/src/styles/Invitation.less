@@ -1,0 +1,43 @@
+.InvitationContent {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    background: linear-gradient(
+      162deg,
+      #600a0c 27%,
+      #4d0808 43%,
+      #510707 50%,
+      #5d090b 81%
+    );
+    height: 1180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    flex-shrink: 0;
+
+    &-title {
+      font-size: 64px;
+      padding: 46px 24px 0;
+      position: relative;
+
+      &_sideSign {
+        color: #484040;
+        position: absolute;
+        right: -17px;
+        top: 90px;
+        // TODO: Временно, убрать после установки шрифтов
+        letter-spacing: -10px;
+        font-style: italic;
+      }
+    }
+
+    &-newlyweds {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}

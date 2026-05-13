@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { MantineProvider } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals'
 import Home from './pages/Home';
 import AdminAuth from './pages/AdminAuth';
 import AdminDashboard from './pages/AdminDashboard';
@@ -18,7 +20,11 @@ function App() {
           path="/admin/dashboard"
           element={
             <ProtectedRoute>
-              <AdminDashboard />
+              <MantineProvider defaultColorScheme='dark'>
+                <ModalsProvider>
+                  <AdminDashboard />
+                </ModalsProvider>
+              </MantineProvider>
             </ProtectedRoute>
           }
         />
