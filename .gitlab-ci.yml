@@ -8,12 +8,11 @@ stages:
   - build
   - deploy
   - docker
+  - migrate
   - publish
   - notify
 
 include:
-  - project: "utils/shared-ci"
-    file: "telegram-notify.yml"
   - project: "utils/shared-ci"
     file: "docker-build.yml"
   - project: "utils/shared-ci"
@@ -50,6 +49,21 @@ build-backend-docker-image:
       when: always
     - if: $IS_DEV
       when: never
+
+prisma-migrate:
+  stage: migrate
+  image: node:20-alpine
+  tags:
+    - truenas
+  script:
+    - cd backend
+    - npm ci
+    - npx prisma generate
+    - npx prisma migrate deploy
+  environment:
+    name: production
+  only:
+    - master
 
 update-cluster-app:
   stage: publish
