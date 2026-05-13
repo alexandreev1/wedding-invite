@@ -61,8 +61,8 @@ update-cluster-app:
   needs:
     - job: build-backend-docker-image
     - job: build-frontend-docker-image
-  before_script:
-    - echo $DOCKER_PASSWORD | docker login -u bustexz
+  # before_script:
+    # - docker login -u bustexz -p $DOCKER_PASSWORD
   script:
     - docker compose pull
     - docker compose up -d
