@@ -13,8 +13,6 @@ stages:
 
 include:
   - project: "utils/shared-ci"
-    file: "telegram-notify.yml"
-  - project: "utils/shared-ci"
     file: "docker-build.yml"
   - project: "utils/shared-ci"
     file: "update-cluster.yml"
