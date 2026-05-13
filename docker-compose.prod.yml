@@ -12,5 +12,5 @@ services:
   frontend:
     image: registry.exz-vps.ru/alexioll-group/wedding-invite/frontend
     ports:
-      - "19099:5173"
+      - "19099:80"
 

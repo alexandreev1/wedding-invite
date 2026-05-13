@@ -1,21 +1,33 @@
-# 1. Используем тот же Node.js
-FROM node:20-alpine
+# ==================== STAGE 1: BUILD ====================
+FROM node:20-alpine AS builder
 
-# 2. Рабочая директория
 WORKDIR /app
 
-# 3. Копируем зависимости
+# Копируем только package-файлы для кэширования слоя
 COPY ./frontend/package*.json ./
 
-# 4. Устанавливаем их
-RUN npm install
+# Устанавливаем зависимости
+RUN npm ci
 
-# 5. Копируем всё остальное
+# Копируем исходники и собираем проект
 COPY ./frontend .
+RUN npm run build
 
-# 6. Открываем порт Vite (по умолчанию 5173)
-EXPOSE 5173
+# ==================== STAGE 2: NGINX ====================
+FROM nginx:alpine
 
-# 7. Запускаем Vite с флагом --host
-# Это критично, чтобы сервис был доступен снаружи контейнера
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Копируем собранные статики из builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Копируем кастомный конфиг nginx (опционально, но рекомендуется)
+COPY ./frontend/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Открываем стандартный порт nginx
+EXPOSE 80
+
+# Health check для Kubernetes/GitLab
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:80/ || exit 1
+
+# Nginx запускается автоматически через ENTRYPOINT образа
+CMD ["nginx", "-g", "daemon off;"]
