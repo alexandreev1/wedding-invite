@@ -1,7 +1,7 @@
-import { memo, useState } from "react";
-import type { IGuest, TGender } from "../types/wedding";
-import { useWeddingStore } from "../store/useWeddingStore";
-import { generateToken, getAvatarUrl } from "../shared/utils";
+import { memo, useState } from 'react';
+import type { IGuest, TGender } from '../types/wedding';
+import { useWeddingStore } from '../store/useWeddingStore';
+import { getAvatarUrl, getToken } from '../shared/utils';
 
 function CreateInvitationForm() {
     const { addInvitation, isLoading } = useWeddingStore();
@@ -21,17 +21,23 @@ function CreateInvitationForm() {
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!guest1.name || (isPair && !guest2.name)) {
+            return;
+        }
+
         const invitationId = crypto.randomUUID();
 
-        const guests: IGuest[] = [{
-            id: crypto.randomUUID(),
-            invitationId: invitationId,
-            name: guest1.name,
-            gender: guest1.gender,
-            avatarUrl: guest1.photo || getAvatarUrl(guest1.name), // Если нет фото, берем Boring Avatars
-            tableId: null,
-            seatNumber: null
-        }];
+        const guests: IGuest[] = [
+            {
+                id: crypto.randomUUID(),
+                invitationId: invitationId,
+                name: guest1.name,
+                gender: guest1.gender,
+                avatarUrl: guest1.photo || getAvatarUrl(guest1.name), // Если нет фото, берем Boring Avatars
+                tableId: null,
+                seatNumber: null,
+            },
+        ];
 
         if (isPair) {
             guests.push({
@@ -41,15 +47,15 @@ function CreateInvitationForm() {
                 gender: guest2.gender,
                 avatarUrl: guest2.photo || getAvatarUrl(guest2.name),
                 tableId: null,
-                seatNumber: null
+                seatNumber: null,
             });
         }
 
         addInvitation({
             id: invitationId,
-            token: generateToken(guest1.name),
+            token: getToken(invitationId),
             guests,
-            isRSVP: false
+            isRSVP: false,
         });
     };
 
@@ -72,20 +78,37 @@ function CreateInvitationForm() {
                     placeholder="Имя гостя"
                     className="w-full text-sm p-1 border-b bg-transparent outline-none"
                     value={guest1.name}
-                    onChange={e => setGuest1({ ...guest1, name: e.target.value })}
+                    onChange={(e) => setGuest1({ ...guest1, name: e.target.value })}
                 />
                 <div className="flex justify-between items-center">
                     <select
                         value={guest1.gender}
-                        onChange={e => setGuest1({ ...guest1, gender: e.target.value as TGender })}
+                        onChange={(e) =>
+                            setGuest1({ ...guest1, gender: e.target.value as TGender })
+                        }
                         className="text-[10px] border p-1 rounded"
                     >
                         <option value="male">М</option>
                         <option value="female">Ж</option>
                     </select>
-                    <input type="file" accept="image/*" onChange={e => handlePhoto(e, setGuest1)} className="hidden" id="p1" />
-                    <label htmlFor="p1" className="text-[10px] cursor-pointer text-blue-500 underline">{guest1.photo ? 'Сменить фото' : 'Фото'}</label>
-                    {guest1.photo && <div className="w-6 h-6 rounded-full overflow-hidden border"><img src={guest1.photo} /></div>}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handlePhoto(e, setGuest1)}
+                        className="hidden"
+                        id="p1"
+                    />
+                    <label
+                        htmlFor="p1"
+                        className="text-[10px] cursor-pointer text-blue-500 underline"
+                    >
+                        {guest1.photo ? 'Сменить фото' : 'Фото'}
+                    </label>
+                    {guest1.photo && (
+                        <div className="w-6 h-6 rounded-full overflow-hidden border">
+                            <img src={guest1.photo} />
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -96,29 +119,50 @@ function CreateInvitationForm() {
                         placeholder="Имя +1"
                         className="w-full text-sm p-1 border-b bg-transparent outline-none"
                         value={guest2.name}
-                        onChange={e => setGuest2({ ...guest2, name: e.target.value })}
+                        onChange={(e) => setGuest2({ ...guest2, name: e.target.value })}
                     />
                     <div className="flex justify-between items-center">
                         <select
                             value={guest2.gender}
-                            onChange={e => setGuest2({ ...guest2, gender: e.target.value as TGender })}
+                            onChange={(e) =>
+                                setGuest2({ ...guest2, gender: e.target.value as TGender })
+                            }
                             className="text-[10px] border p-1 rounded"
                         >
                             <option value="female">Ж</option>
                             <option value="male">М</option>
                         </select>
-                        <input type="file" accept="image/*" onChange={e => handlePhoto(e, setGuest2)} className="hidden" id="p2" />
-                        <label htmlFor="p2" className="text-[10px] cursor-pointer text-blue-500 underline">{guest2.photo ? 'Сменить фото' : 'Фото'}</label>
-                        {guest2.photo && <div className="w-6 h-6 rounded-full overflow-hidden border"><img src={guest2.photo} /></div>}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handlePhoto(e, setGuest2)}
+                            className="hidden"
+                            id="p2"
+                        />
+                        <label
+                            htmlFor="p2"
+                            className="text-[10px] cursor-pointer text-blue-500 underline"
+                        >
+                            {guest2.photo ? 'Сменить фото' : 'Фото'}
+                        </label>
+                        {guest2.photo && (
+                            <div className="w-6 h-6 rounded-full overflow-hidden border">
+                                <img src={guest2.photo} />
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
 
-            <button type="submit" className="w-full py-2 bg-stone-800 text-white rounded text-sm font-bold hover:bg-stone-700" disabled={isLoading}>
+            <button
+                type="submit"
+                className="w-full py-2 bg-stone-800 text-white rounded text-sm font-bold hover:bg-stone-700"
+                disabled={isLoading}
+            >
                 Создать приглашение
             </button>
         </form>
-    )
+    );
 }
 
 export default memo(CreateInvitationForm);

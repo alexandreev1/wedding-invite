@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "SybarisOpti";
+  src:
+    url("./assets/fonts/SybarisOpti.ttf.woff") format("woff"),
+    url("./assets/fonts/SybarisOpti.ttf.svg#SybarisOpti") format("svg"),
+    url("./assets/fonts/SybarisOpti.ttf.eot"),
+    url("./assets/fonts/SybarisOpti.ttf.eot?#iefix") format("embedded-opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SimpleSerenityScript";
+  src: url("./assets/fonts/SimpleSerenityScript.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "SimpleSerenitySerif";
+  src: url("./assets/fonts/SimpleSerenitySerif.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Caravan";
+  src: url("./assets/fonts/Caravan.woff2") format("woff2");
+}
+
 html,
 body,
 #root {

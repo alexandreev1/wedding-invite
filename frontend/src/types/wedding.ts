@@ -22,3 +22,8 @@ export interface IInvitation {
     guests: IGuest[];
     isRSVP: boolean;
 }
+
+export interface ILocationProps {
+    caption: string;
+    href: string;
+}

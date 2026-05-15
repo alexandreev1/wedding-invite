@@ -11,3 +11,14 @@ export const TABLES = [
     { id: 8, name: 'Стол 8', maxSeats: 4 },
     { id: 9, name: 'Стол 9', maxSeats: 5 }, // Торцевое место (Seat 5)
 ];
+
+export const LOCATIONS_INFO = {
+    REGISTRY: {
+        caption: 'Роспись состоится в ЗАГС по адресу:\nул. Кораблестроителей, 6',
+        href: 'https://yandex.ru/maps/-/CPgWjEoS',
+    },
+    BANKET: {
+        caption: 'Банкет пройдёт\nв парк-отеле "Бухта Коприно",\nверанда ресторана "Калита"',
+        href: 'https://yandex.ru/maps/-/CPgWj-k7',
+    },
+};
