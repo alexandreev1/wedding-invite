@@ -27,3 +27,8 @@ export interface ILocationProps {
     caption: string;
     href: string;
 }
+
+export interface IButtonProps {
+    caption: string;
+    onButtonClick: () => void;
+}

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import Location from '../components/Location';
 import calendar from '../assets/calendar.svg';
@@ -9,6 +9,7 @@ import timingDrink from '../assets/timing-drink.svg';
 import timingDance from '../assets/timing-dance.svg';
 import '../styles/Invitation.less';
 import { LOCATIONS_INFO } from '../shared/constants';
+import Button from '../components/Button';
 
 const GuestInvite = () => {
     const { token } = useParams();
@@ -22,6 +23,10 @@ const GuestInvite = () => {
         () => currentInvitation?.guests.map((g) => g.name).join(' и '),
         [currentInvitation],
     );
+
+    const handleTelegramButtonClick = useCallback(() => {
+        window.open('https://t.me/francheskamay', '_blanc', 'noopener,noreferrer');
+    }, []);
 
     if (!guestNames) {
         return null;
@@ -133,6 +138,14 @@ const GuestInvite = () => {
                     Для дам это могут быть коктейльные или вечерние платья, для мужчин —
                     классические брюки в сочетании с рубашкой.
                 </span>
+            </div>
+            <div className="InvitationContent__fourthSection">
+                <span className="InvitationContent__fourthSection-title">DETAILS</span>
+                <div className="InvitationContent__fourthSection-caption">
+                    Если вы заблудились, готовите сюрприз или у вас есть какие-то вопросы, вам
+                    поможет наш организатор Анастасия
+                </div>
+                <Button caption="@francheskamay" onButtonClick={handleTelegramButtonClick} />
             </div>
         </div>
     );
