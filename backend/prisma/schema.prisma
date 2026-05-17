@@ -22,4 +22,5 @@ model Guest {
   seatNumber   Int?
   invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
   invitationId String
+  formResult   String?
 }

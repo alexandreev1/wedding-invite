@@ -5,12 +5,16 @@ import { api } from '../shared/api';
 interface WeddingState {
     invitations: IInvitation[];
     currentInvitation: IInvitation | null;
+    guestData: IGuest | null;
 
     fetchInvitations: () => Promise<void>;
 
     getInvitation: (token: string | undefined) => Promise<void>;
 
     getAllGuests: () => IGuest[];
+
+    fetchGuestData: (id: string | undefined) => Promise<void>;
+    patchGuestData: (id: string | undefined, formResult: string | null) => Promise<void>;
 
     // Экшены для управления гостями
     addInvitation: (invitation: IInvitation) => Promise<void>;
@@ -36,6 +40,7 @@ interface WeddingState {
 export const useWeddingStore = create<WeddingState>((set, get) => ({
     invitations: [],
     currentInvitation: null,
+    guestData: null,
     isLoading: false,
     isAdmin: false,
     isPair: false,
@@ -82,7 +87,7 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
             // 2. Обновляем локальный стейт
             await get().fetchInvitations();
         } catch (error) {
-            alert('Не добавить приглашение. Данные будут откачены.');
+            alert('Ошибка получения данных гостя.');
             await get().fetchInvitations(); // Откатываем UI к состоянию базы
         } finally {
             set({ isLoading: false });
@@ -93,6 +98,38 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
 
     getAllGuests: () => {
         return get().invitations.flatMap((invite) => invite.guests);
+    },
+
+    fetchGuestData: async (id: string | undefined) => {
+        if (!id) {
+            return;
+        }
+
+        set({ isLoading: true });
+        try {
+            const res = await api.get(`guest-by-id/${id}`);
+            set({ guestData: res.data });
+        } catch (error) {
+            console.error('Не добавить приглашение. Данные будут откачены.', error);
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    patchGuestData: async (id, formResult) => {
+        if (!id) {
+            return;
+        }
+
+        set({ isLoading: true });
+        try {
+            await api.patch(`/guests/${id}`, { formResult });
+            await get().fetchGuestData(id);
+        } catch (error) {
+            console.error('Данные формы не обновились: ', error);
+        } finally {
+            set({ isLoading: false });
+        }
     },
 
     updateGuestSeat: async (guestId, tableId, seatNumber) => {

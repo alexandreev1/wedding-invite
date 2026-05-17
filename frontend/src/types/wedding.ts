@@ -14,6 +14,7 @@ export interface IGuest {
     tableId: number | null;
     seatNumber: number | null;
     invitationId: string;
+    formResult: string | undefined;
 }
 
 export interface IInvitation {

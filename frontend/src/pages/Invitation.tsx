@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import Location from '../components/Location';
@@ -14,6 +14,7 @@ import Button from '../components/Button';
 const GuestInvite = () => {
     const { token } = useParams();
     const { getInvitation, currentInvitation, isPair } = useWeddingStore();
+    const [guest1, guest2] = currentInvitation?.guests || [];
 
     useEffect(() => {
         getInvitation(token);
@@ -27,6 +28,10 @@ const GuestInvite = () => {
     const handleTelegramButtonClick = useCallback(() => {
         window.open('https://t.me/francheskamay', '_blanc', 'noopener,noreferrer');
     }, []);
+
+    const handleOpenFormButtonClick = useCallback(() => {
+        window.open(`/guest-form/${guest1.id}`, '_blanc', 'noopener,noreferrer');
+    }, [guest1]);
 
     if (!guestNames) {
         return null;
@@ -147,6 +152,7 @@ const GuestInvite = () => {
                 </div>
                 <Button caption="@francheskamay" onButtonClick={handleTelegramButtonClick} />
             </div>
+            <Button caption="Заполнить форму" onButtonClick={handleOpenFormButtonClick} />
         </div>
     );
 };
