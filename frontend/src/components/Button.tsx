@@ -1,10 +1,14 @@
 import { memo } from 'react';
+import { clsx } from 'clsx';
 import type { IButtonProps } from '../types/wedding';
 import '../styles/Button.less';
 
-function Button({ caption, onButtonClick }: IButtonProps) {
+function Button({ caption, viewMode = 'regular', onButtonClick }: IButtonProps) {
     return (
-        <button className="InvitationButton" onClick={onButtonClick}>
+        <button
+            className={clsx('InvitationButton', `InvitationButton__${viewMode}`)}
+            onClick={onButtonClick}
+        >
             {caption}
         </button>
     );

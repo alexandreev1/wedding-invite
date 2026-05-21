@@ -104,6 +104,19 @@ app.patch("/api/guests/:id", async (req, res) => {
   }
 });
 
+app.patch("/api/update-invitation/:token", async (req, res) => {
+  const { token } = req.params;
+  try {
+    const updatedInvitation = await prisma.invitation.update({
+      where: { token },
+      data: { ...req.body },
+    });
+    res.json(updatedInvitation);
+  } catch (error) {
+    res.status(500).json({ error: "Не удалось обновить приглашение" });
+  }
+});
+
 app.delete("/api/invitations/:id", async (req, res) => {
   await prisma.invitation.delete({ where: { id: req.params.id } });
   res.sendStatus(204);

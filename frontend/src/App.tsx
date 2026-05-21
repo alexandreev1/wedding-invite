@@ -30,7 +30,14 @@ function App() {
                     }
                 />
                 <Route path="/invite/:token" element={<Invitation />} />
-                <Route path="/guest-form/:id" element={<GuestForm />} />
+                <Route
+                    path="/guest-form/:id"
+                    element={
+                        <MantineProvider defaultColorScheme="light">
+                            <GuestForm />
+                        </MantineProvider>
+                    }
+                />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>

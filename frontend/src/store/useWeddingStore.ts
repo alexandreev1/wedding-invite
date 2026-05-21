@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import type { IGuest, IInvitation } from '../types/wedding';
+import type { IGuest, IGuestFormResult, IInvitation } from '../types/wedding';
 import { api } from '../shared/api';
+import { getInitialGuestFormData } from '../shared/utils';
 
 interface WeddingState {
     invitations: IInvitation[];
@@ -29,12 +30,15 @@ interface WeddingState {
     removeGuestFromTable: (guestId: string) => Promise<void>;
 
     // Экшен для RSVP (со стороны гостя)
-    updateRSVP: (guestId: string, status: boolean) => void;
+    updateRSVP: (token: string | undefined, status: boolean) => Promise<void>;
 
-    resetStore: () => void;
     isLoading: boolean;
     isAdmin: boolean;
     isPair: boolean;
+    firstGuest: IGuest | null;
+    secondGuest: IGuest | null;
+
+    guestFormData: IGuestFormResult | null;
 }
 
 export const useWeddingStore = create<WeddingState>((set, get) => ({
@@ -44,6 +48,9 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
     isLoading: false,
     isAdmin: false,
     isPair: false,
+    firstGuest: null,
+    secondGuest: null,
+    guestFormData: null,
 
     // Загрузка данных из БД при старте приложения
     fetchInvitations: async () => {
@@ -71,7 +78,11 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
             set({ currentInvitation: res.data });
 
             const currentInvitation = get().currentInvitation;
-            set({ isPair: !!currentInvitation && currentInvitation.guests.length > 1 });
+            set({
+                isPair: !!currentInvitation && currentInvitation.guests.length > 1,
+                firstGuest: currentInvitation?.guests[0],
+                secondGuest: currentInvitation?.guests[1],
+            });
         } catch (error) {
             console.error('Ошибка получения приглашения:', error);
         } finally {
@@ -108,7 +119,12 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
         set({ isLoading: true });
         try {
             const res = await api.get(`guest-by-id/${id}`);
-            set({ guestData: res.data });
+            const guestData = res.data as IGuest;
+            set({ guestData });
+            const guestFormData =
+                (guestData.formResult && JSON.parse(guestData.formResult)) ||
+                getInitialGuestFormData();
+            set({ guestFormData });
         } catch (error) {
             console.error('Не добавить приглашение. Данные будут откачены.', error);
         } finally {
@@ -178,15 +194,15 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
         }
     },
 
-    updateRSVP: (guestId, status) =>
-        set((state) => ({
-            invitations: state.invitations.map((invite) => ({
-                ...invite,
-                guests: invite.guests.map((guest) =>
-                    guest.id === guestId ? { ...guest, isRSVP: status } : guest,
-                ),
-            })),
-        })),
-
-    resetStore: () => set({ invitations: [] }),
+    updateRSVP: async (token, status) => {
+        set({ isLoading: true });
+        try {
+            await api.patch(`/update-invitation/${token}`, { isRSVP: status });
+            await get().getInvitation(token);
+        } catch (error) {
+            console.error('Не удалось обновить приглашение: ', error);
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 }));

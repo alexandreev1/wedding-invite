@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useWeddingStore } from '../store/useWeddingStore';
 import Location from '../components/Location';
@@ -13,12 +13,10 @@ import Button from '../components/Button';
 
 const GuestInvite = () => {
     const { token } = useParams();
-    const { getInvitation, currentInvitation, isPair } = useWeddingStore();
-    const [guest1, guest2] = currentInvitation?.guests || [];
+    const { getInvitation, updateRSVP, currentInvitation, isPair, firstGuest, secondGuest } =
+        useWeddingStore();
 
-    useEffect(() => {
-        getInvitation(token);
-    }, [token]);
+    const isRSVP = currentInvitation?.isRSVP;
 
     const guestNames = useMemo(
         () => currentInvitation?.guests.map((g) => g.name).join(' и '),
@@ -29,9 +27,17 @@ const GuestInvite = () => {
         window.open('https://t.me/francheskamay', '_blanc', 'noopener,noreferrer');
     }, []);
 
-    const handleOpenFormButtonClick = useCallback(() => {
-        window.open(`/guest-form/${guest1.id}`, '_blanc', 'noopener,noreferrer');
-    }, [guest1]);
+    const handleRSVPButtonClick = useCallback(async () => {
+        await updateRSVP(token, !isRSVP);
+    }, [updateRSVP, token, isRSVP]);
+
+    const handleOpenFormButtonClick = useCallback((guestId: string) => {
+        window.open(`/guest-form/${guestId}`, '_blanc', 'noopener,noreferrer');
+    }, []);
+
+    useEffect(() => {
+        getInvitation(token);
+    }, [token]);
 
     if (!guestNames) {
         return null;
@@ -64,12 +70,18 @@ const GuestInvite = () => {
                 </div>
                 <div className="InvitationContent__firstSection-mainInfo">
                     <div className="InvitationContent__firstSection-mainInfo-addressing">
-                        <span>{isPair ? 'Дорогие' : 'Дорогой'}</span>
+                        <span>
+                            {isPair
+                                ? 'Дорогие'
+                                : firstGuest?.gender === 'male'
+                                  ? 'Дорогой'
+                                  : 'Дорогая'}
+                        </span>
                         <span>{guestNames}!</span>
                     </div>
                     <div className="InvitationContent__firstSection-mainInfo-invitation">
                         {`Приглашаем ${isPair ? 'вас' : 'тебя'} разделить с нами самое важное, трогательное и особенное
-                        событие в нашей жизни — рождение нашей семьи.`}
+                        событие в нашей жизни — рождение нашей семьи!`}
                     </div>
                     <div className="InvitationContent__firstSection-mainInfo-calendar">
                         <span className="InvitationContent__firstSection-mainInfo-calendar-title">
@@ -152,7 +164,51 @@ const GuestInvite = () => {
                 </div>
                 <Button caption="@francheskamay" onButtonClick={handleTelegramButtonClick} />
             </div>
-            <Button caption="Заполнить форму" onButtonClick={handleOpenFormButtonClick} />
+            <div className="InvitationContent__fifthSection">
+                {!isRSVP ? (
+                    <span className="InvitationContent__fifthSection-caption">
+                        Мы просим {isPair ? 'вас' : 'тебя'} подтвердить присутствие и заполнить
+                        небольшую анкету
+                    </span>
+                ) : (
+                    <span className="InvitationContent__fifthSection-caption">
+                        Спасибо, мы будем очень рады видеть {isPair ? 'вас' : 'тебя'} на нашем
+                        празднике!
+                    </span>
+                )}
+                {isRSVP && (
+                    <div className="InvitationContent__fifthSection-pollGroups">
+                        {firstGuest && (
+                            <div className="InvitationContent__fifthSection-pollGroups-item">
+                                <span className="InvitationContent__fifthSection-caption InvitationContent__fifthSection-caption_small">
+                                    {firstGuest.name}, просим заполнить анкету:
+                                </span>
+                                <Button
+                                    caption="Анкета"
+                                    onButtonClick={() => handleOpenFormButtonClick(firstGuest.id)}
+                                />
+                            </div>
+                        )}
+                        {secondGuest && (
+                            <div className="InvitationContent__fifthSection-pollGroups-item">
+                                <span className="InvitationContent__fifthSection-caption InvitationContent__fifthSection-caption_small">
+                                    {secondGuest.name}, просим заполнить анкету:
+                                </span>
+                                <Button
+                                    caption="Анкета"
+                                    onButtonClick={() => handleOpenFormButtonClick(secondGuest.id)}
+                                />
+                            </div>
+                        )}
+                    </div>
+                )}
+                <Button
+                    caption={!isRSVP ? (isPair ? 'Мы придём' : 'Я приду') : 'Отменить присутствие'}
+                    viewMode={isRSVP ? 'link' : 'regular'}
+                    onButtonClick={handleRSVPButtonClick}
+                />
+            </div>
+            {/* <Button caption="Заполнить форму" onButtonClick={handleOpenFormButtonClick} /> */}
         </div>
     );
 };

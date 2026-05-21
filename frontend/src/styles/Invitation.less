@@ -221,11 +221,11 @@
         gap: 30px;
 
         @media (min-width: 768px) {
-            padding: 0 15%;
+            padding: 24px 15%;
         }
 
         @media (min-width: 1080px) {
-            padding: 0 20%;
+            padding: 24px 20%;
         }
 
         &-title {
@@ -298,6 +298,42 @@
             letter-spacing: 10%;
             font-variant-caps: small-caps;
             text-align: center;
+        }
+    }
+
+    &__fifthSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #eee1e1;
+        padding: 18px 40px;
+        gap: 30px;
+
+        &-caption {
+            font-family: 'Cormorant SC', serif;
+            font-weight: 300;
+            font-size: 20px;
+            letter-spacing: 10%;
+            font-variant-caps: small-caps;
+            text-align: center;
+
+            &_small {
+                font-size: 16px;
+            }
+        }
+
+        &-pollGroups {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+
+            &-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
         }
     }
 }
