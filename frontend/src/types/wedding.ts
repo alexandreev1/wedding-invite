@@ -1,4 +1,10 @@
-import type { GUEST_FORM_BUFFET_ITEMS, GUEST_FORM_ITEMS } from '../shared/constants';
+import type {
+    GUEST_FORM_BANQUET_ITEMS,
+    GUEST_FORM_BUFFET_ITEMS,
+    GUEST_FORM_HOT_DISH_ITEMS,
+    GUEST_FORM_ITEMS,
+    GUEST_FORM_TRANSFER_ITEMS,
+} from '../shared/constants';
 
 export interface ITable {
     id: number;
@@ -43,6 +49,13 @@ export interface ICheckboxProps {
     onValueChange: (newValue: boolean) => void;
 }
 
+export interface ITextInputProps {
+    label: string;
+    placeholder: string;
+    value: string | undefined;
+    onValueChange: (newValue: string) => void;
+}
+
 interface IRadioGroupConfig {
     value: string;
     label: string;
@@ -59,4 +72,9 @@ export interface IRadioGroupProps {
 
 export interface IGuestFormResult {
     [GUEST_FORM_ITEMS.BUFFET]: Record<GUEST_FORM_BUFFET_ITEMS, boolean>;
+    [GUEST_FORM_ITEMS.BANQUET]: Record<GUEST_FORM_BANQUET_ITEMS, boolean> & {
+        [GUEST_FORM_BANQUET_ITEMS.ADDITIONAL_INFO]: string | undefined;
+    };
+    [GUEST_FORM_ITEMS.HOT_DISH]: GUEST_FORM_HOT_DISH_ITEMS | null;
+    [GUEST_FORM_ITEMS.TRANSFER]: GUEST_FORM_TRANSFER_ITEMS | null;
 }

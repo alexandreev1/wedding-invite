@@ -1,5 +1,5 @@
 import * as short from 'short-uuid';
-import { GUEST_FORM_BUFFET_ITEMS, GUEST_FORM_ITEMS } from './constants';
+import { GUEST_FORM_BANQUET_ITEMS, GUEST_FORM_BUFFET_ITEMS, GUEST_FORM_ITEMS } from './constants';
 import type { IGuestFormResult } from '../types/wedding';
 
 // Функция для формирования чистого URL аватарки
@@ -19,5 +19,16 @@ export function getInitialGuestFormData(): IGuestFormResult {
             [GUEST_FORM_BUFFET_ITEMS.BEER]: false,
             [GUEST_FORM_BUFFET_ITEMS.SOFT_DRINKS]: false,
         },
+        [GUEST_FORM_ITEMS.BANQUET]: {
+            [GUEST_FORM_BANQUET_ITEMS.SPARKLING_WINE]: false,
+            [GUEST_FORM_BANQUET_ITEMS.RED_WINE]: false,
+            [GUEST_FORM_BANQUET_ITEMS.WHITE_WINE]: false,
+            [GUEST_FORM_BANQUET_ITEMS.WHISKEY]: false,
+            [GUEST_FORM_BANQUET_ITEMS.COGNAC]: false,
+            [GUEST_FORM_BANQUET_ITEMS.SOFT_DRINKS]: false,
+            [GUEST_FORM_BANQUET_ITEMS.ADDITIONAL_INFO]: '',
+        },
+        [GUEST_FORM_ITEMS.HOT_DISH]: null,
+        [GUEST_FORM_ITEMS.TRANSFER]: null,
     };
 }

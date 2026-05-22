@@ -13,8 +13,9 @@ function RadioGroup({ groupLabel, value, onValueChange, radioGroupConfig }: IRad
             classNames={{ label: 'RadioGroup__groupLabel' }}
         >
             <Group gap="sm" className="RadioGroup__group">
-                {radioGroupConfig.map((item) => (
+                {radioGroupConfig.map((item, index) => (
                     <MantineRadio
+                        key={index}
                         value={item.value}
                         label={item.label}
                         color="#710912"

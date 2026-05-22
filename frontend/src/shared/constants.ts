@@ -43,46 +43,79 @@ export enum GUEST_FORM_BUFFET_ITEMS {
     SOFT_DRINKS = 'softDrinks',
 }
 
+export enum GUEST_FORM_BANQUET_ITEMS {
+    SPARKLING_WINE = 'sparklingWine',
+    RED_WINE = 'redWine',
+    WHITE_WINE = 'whiteWine',
+    WHISKEY = 'whiskey',
+    COGNAC = 'cognac',
+    SOFT_DRINKS = 'softDrinks',
+    ADDITIONAL_INFO = 'additionalInfo',
+}
+
+export enum GUEST_FORM_HOT_DISH_ITEMS {
+    FISH = 'fish',
+    DUCK = 'duck',
+    BEEF = 'beef',
+    PORK = 'pork',
+}
+
+export enum GUEST_FORM_TRANSFER_ITEMS {
+    FORWARD = 'forward',
+    BACK_AND_FORWARD = 'backAndForward',
+    BACK = 'back',
+    DECLINE = 'decline',
+}
+
 export const GUEST_FORM_BUFFET_ITEMS_CAPTIONS = {
     [GUEST_FORM_BUFFET_ITEMS.SPARKLING_WINE]: 'Игристое вино',
     [GUEST_FORM_BUFFET_ITEMS.BEER]: 'Пиво',
     [GUEST_FORM_BUFFET_ITEMS.SOFT_DRINKS]: 'Безалкогольные напитки',
 };
 
+export const GUEST_FORM_BANQUET_ITEMS_CAPTIONS = {
+    [GUEST_FORM_BANQUET_ITEMS.SPARKLING_WINE]: 'Игристое вино',
+    [GUEST_FORM_BANQUET_ITEMS.RED_WINE]: 'Красное вино',
+    [GUEST_FORM_BANQUET_ITEMS.WHITE_WINE]: 'Белое вино',
+    [GUEST_FORM_BANQUET_ITEMS.WHISKEY]: 'Виски',
+    [GUEST_FORM_BANQUET_ITEMS.COGNAC]: 'Коньяк',
+    [GUEST_FORM_BANQUET_ITEMS.SOFT_DRINKS]: 'Безалкогольные напитки',
+};
+
 export const HOT_DISH_RADIO_GROUP_CONFIG = [
     {
-        value: 'fish',
+        value: GUEST_FORM_HOT_DISH_ITEMS.FISH,
         label: 'Филе дорадо c овощным рататуем',
     },
     {
-        value: 'duck',
+        value: GUEST_FORM_HOT_DISH_ITEMS.DUCK,
         label: 'Грудка утки c птитимом в пряных травах c мандариновым соусом',
     },
     {
-        value: 'beef',
+        value: GUEST_FORM_HOT_DISH_ITEMS.BEEF,
         label: 'Щечки говяжьи в мясном соусе с картофельным гратеном',
     },
     {
-        value: 'pork',
+        value: GUEST_FORM_HOT_DISH_ITEMS.PORK,
         label: 'Свинина запеченая с жареной стручковой фасолью и томатным соусом',
     },
 ];
 
 export const TRANSFER_RADIO_GROUP_CONFIG = [
     {
-        value: 'forward',
+        value: GUEST_FORM_TRANSFER_ITEMS.FORWARD,
         label: 'Только туда',
     },
     {
-        value: 'backAndForward',
+        value: GUEST_FORM_TRANSFER_ITEMS.BACK_AND_FORWARD,
         label: 'Туда и обратно',
     },
     {
-        value: 'back',
+        value: GUEST_FORM_TRANSFER_ITEMS.BACK,
         label: 'Только обратно',
     },
     {
-        value: 'decline',
+        value: GUEST_FORM_TRANSFER_ITEMS.DECLINE,
         label: 'Не нужен',
     },
 ];

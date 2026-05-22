@@ -1,7 +1,6 @@
 import { create } from 'zustand';
-import type { IGuest, IGuestFormResult, IInvitation } from '../types/wedding';
+import type { IGuest, IInvitation } from '../types/wedding';
 import { api } from '../shared/api';
-import { getInitialGuestFormData } from '../shared/utils';
 
 interface WeddingState {
     invitations: IInvitation[];
@@ -37,8 +36,6 @@ interface WeddingState {
     isPair: boolean;
     firstGuest: IGuest | null;
     secondGuest: IGuest | null;
-
-    guestFormData: IGuestFormResult | null;
 }
 
 export const useWeddingStore = create<WeddingState>((set, get) => ({
@@ -50,7 +47,6 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
     isPair: false,
     firstGuest: null,
     secondGuest: null,
-    guestFormData: null,
 
     // Загрузка данных из БД при старте приложения
     fetchInvitations: async () => {
@@ -119,12 +115,7 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
         set({ isLoading: true });
         try {
             const res = await api.get(`guest-by-id/${id}`);
-            const guestData = res.data as IGuest;
-            set({ guestData });
-            const guestFormData =
-                (guestData.formResult && JSON.parse(guestData.formResult)) ||
-                getInitialGuestFormData();
-            set({ guestFormData });
+            set({ guestData: res.data });
         } catch (error) {
             console.error('Не добавить приглашение. Данные будут откачены.', error);
         } finally {
