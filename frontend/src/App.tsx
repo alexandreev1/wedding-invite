@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
 import Home from './pages/Home';
 import AdminAuth from './pages/AdminAuth';
 import AdminDashboard from './pages/AdminDashboard';
@@ -34,6 +35,7 @@ function App() {
                     path="/guest-form/:id"
                     element={
                         <MantineProvider>
+                            <Notifications />
                             <GuestForm />
                         </MantineProvider>
                     }

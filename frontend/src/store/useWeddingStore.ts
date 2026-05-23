@@ -142,6 +142,7 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
             await get().fetchGuestData(id);
         } catch (error) {
             console.error('Данные формы не обновились: ', error);
+            throw error;
         } finally {
             set({ isLoading: false });
         }

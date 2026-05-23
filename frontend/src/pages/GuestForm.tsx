@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useCallback, useEffect } from 'react';
+import { notifications } from '@mantine/notifications';
 import { useWeddingStore } from '../store/useWeddingStore';
 import Checkbox from '../components/Checkbox';
 import Button from '../components/Button';
@@ -25,8 +26,23 @@ function GuestForm() {
     const { fetchGuestData, guestData, patchGuestData } = useWeddingStore();
     const { initForm, formData, updateBaseField, updateNestedField } = useSurveyStore();
 
-    const handleSendResultButtonClick = useCallback(() => {
-        patchGuestData(id, JSON.stringify(formData));
+    const handleSendResultButtonClick = useCallback(async () => {
+        try {
+            await patchGuestData(id, JSON.stringify(formData));
+            notifications.show({
+                title: 'Готово!',
+                message: 'Анкета успешно сохранена',
+                color: 'green',
+                autoClose: true,
+            });
+        } catch (_error) {
+            notifications.show({
+                title: 'УПС!',
+                message: 'Что-то пошло не так, анкета не сохранилась',
+                color: 'red',
+                autoClose: true,
+            });
+        }
     }, [id, formData]);
 
     const handleCheckboxValueChange = useCallback(
@@ -279,7 +295,10 @@ function GuestForm() {
                 }
                 radioGroupConfig={TRANSFER_RADIO_GROUP_CONFIG}
             />
-            <Button caption="Отправить" onButtonClick={handleSendResultButtonClick} />
+            <Button
+                caption={guestData?.formResult ? 'Изменить' : 'Отправить'}
+                onButtonClick={handleSendResultButtonClick}
+            />
         </div>
     );
 }

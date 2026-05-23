@@ -218,7 +218,7 @@ const GuestInvite = () => {
                     </div>
                 )}
                 <Button
-                    caption={!isRSVP ? (isPair ? 'Мы придём' : 'Я приду') : 'Отменить присутствие'}
+                    caption={!isRSVP ? (isPair ? 'мы придём' : 'я приду') : 'Отменить присутствие'}
                     viewMode={isRSVP ? 'link' : 'regular'}
                     onButtonClick={handleRSVPButtonClick}
                 />
