@@ -102,40 +102,56 @@ export const WINE_TYPE_DATA = [
     { label: GUEST_FORM_WINE_SORTS_CAPTIONS[WINE_TYPES.DRY], value: WINE_TYPES.DRY },
 ];
 
+export const HOT_DISH_CAPTIONS = {
+    [GUEST_FORM_HOT_DISH_ITEMS.FISH]: 'Филе дорадо c овощным рататуем',
+    [GUEST_FORM_HOT_DISH_ITEMS.DUCK]:
+        'Грудка утки c птитимом в пряных травах c мандариновым соусом',
+    [GUEST_FORM_HOT_DISH_ITEMS.BEEF]: 'Щечки говяжьи в мясном соусе с картофельным гратеном',
+    [GUEST_FORM_HOT_DISH_ITEMS.PORK]:
+        'Свинина запеченая с жареной стручковой фасолью и томатным соусом',
+};
+
 export const HOT_DISH_RADIO_GROUP_CONFIG = [
     {
         value: GUEST_FORM_HOT_DISH_ITEMS.FISH,
-        label: 'Филе дорадо c овощным рататуем',
+        label: HOT_DISH_CAPTIONS[GUEST_FORM_HOT_DISH_ITEMS.FISH],
     },
     {
         value: GUEST_FORM_HOT_DISH_ITEMS.DUCK,
-        label: 'Грудка утки c птитимом в пряных травах c мандариновым соусом',
+        label: HOT_DISH_CAPTIONS[GUEST_FORM_HOT_DISH_ITEMS.DUCK],
     },
     {
         value: GUEST_FORM_HOT_DISH_ITEMS.BEEF,
-        label: 'Щечки говяжьи в мясном соусе с картофельным гратеном',
+        label: HOT_DISH_CAPTIONS[GUEST_FORM_HOT_DISH_ITEMS.BEEF],
     },
     {
         value: GUEST_FORM_HOT_DISH_ITEMS.PORK,
-        label: 'Свинина запеченая с жареной стручковой фасолью и томатным соусом',
+        label: HOT_DISH_CAPTIONS[GUEST_FORM_HOT_DISH_ITEMS.PORK],
     },
 ];
+
+export const TRANSFER_CAPTIONS = {
+    [GUEST_FORM_TRANSFER_ITEMS.FORWARD]: 'Только туда',
+    [GUEST_FORM_TRANSFER_ITEMS.BACK_AND_FORWARD]: 'Туда и обратно',
+    [GUEST_FORM_TRANSFER_ITEMS.BACK]: 'Только обратно',
+    [GUEST_FORM_TRANSFER_ITEMS.DECLINE]: 'Не нужен',
+};
 
 export const TRANSFER_RADIO_GROUP_CONFIG = [
     {
         value: GUEST_FORM_TRANSFER_ITEMS.FORWARD,
-        label: 'Только туда',
+        label: TRANSFER_CAPTIONS[GUEST_FORM_TRANSFER_ITEMS.FORWARD],
     },
     {
         value: GUEST_FORM_TRANSFER_ITEMS.BACK_AND_FORWARD,
-        label: 'Туда и обратно',
+        label: TRANSFER_CAPTIONS[GUEST_FORM_TRANSFER_ITEMS.BACK_AND_FORWARD],
     },
     {
         value: GUEST_FORM_TRANSFER_ITEMS.BACK,
-        label: 'Только обратно',
+        label: TRANSFER_CAPTIONS[GUEST_FORM_TRANSFER_ITEMS.BACK],
     },
     {
         value: GUEST_FORM_TRANSFER_ITEMS.DECLINE,
-        label: 'Не нужен',
+        label: TRANSFER_CAPTIONS[GUEST_FORM_TRANSFER_ITEMS.DECLINE],
     },
 ];

@@ -1,0 +1,26 @@
+.SurveyTable {
+    display: grid;
+    grid-template-rows: auto;
+    padding: 60px 24px;
+
+    &__row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        border-top: 1px solid #000;
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+    }
+
+    &__row:last-child {
+        border-bottom: 1px solid #000;
+    }
+
+    &__column {
+        padding: 4px 2px;
+        text-align: center;
+    }
+
+    &__column:not(:last-child) {
+        border-right: 1px solid #000;
+    }
+}

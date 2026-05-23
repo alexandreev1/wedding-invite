@@ -13,8 +13,7 @@ import { TABLES } from '../shared/constants';
 import type { IGuest, ITable } from '../types/wedding';
 
 const SittingPlan = () => {
-    const { updateGuestSeat, removeGuestFromTable, fetchInvitations, invitations } =
-        useWeddingStore();
+    const { updateGuestSeat, removeGuestFromTable, invitations } = useWeddingStore();
 
     const [activeId, setActiveId] = useState<string | null>(null);
     const [selectedTableForSeating, setSelectedTableForSeating] = useState<number | null>(null);
@@ -81,10 +80,6 @@ const SittingPlan = () => {
         () => allGuests.find((g) => g.id === activeId),
         [allGuests, activeId],
     );
-
-    useEffect(() => {
-        fetchInvitations();
-    }, [fetchInvitations]);
 
     if (!invitations) {
         return null;
