@@ -19,7 +19,7 @@ function Location({ caption, href }: ILocationProps) {
                 <img src={locationIcon} alt="" />
                 <div className="LocationContent__content-caption">{caption}</div>
             </div>
-            <Button caption="Локация" onButtonClick={handleLocationButtonClick} />
+            <Button caption="локация" onButtonClick={handleLocationButtonClick} />
         </div>
     );
 }

@@ -27,6 +27,10 @@ const GuestInvite = () => {
         window.open('https://t.me/francheskamay', '_blanc', 'noopener,noreferrer');
     }, []);
 
+    const handleSitiingPlanButtonClick = useCallback(() => {
+        // asd
+    }, []);
+
     const handleRSVPButtonClick = useCallback(async () => {
         await updateRSVP(token, !isRSVP);
     }, [updateRSVP, token, isRSVP]);
@@ -140,9 +144,9 @@ const GuestInvite = () => {
                     <div>ODE</div>
                 </div>
                 <span className="InvitationContent__thirdSection-caption">
-                    Мы не хотим ограничивать вас в выборе цветов — ориентируйтесь на образ, в
-                    котором вам будет комфортно. Но будем искренне рады, если вам захочется
-                    поддержать оттенки нашего праздника.
+                    {`Мы не хотим ограничивать ${isPair ? 'вас' : 'тебя'} в выборе цветов — ${isPair ? 'ориентируйтесь' : 'ориентируйся'} на образ, в
+                    котором ${isPair ? 'вам' : 'тебе'} будет комфортно. Но будем искренне рады, если ${isPair ? 'вам' : 'тебе'} захочется
+                    поддержать оттенки нашего праздника.`}
                 </span>
                 <div className="InvitationContent__thirdSection-colors">
                     <div className="InvitationContent__thirdSection-colors-color1"></div>
@@ -159,43 +163,54 @@ const GuestInvite = () => {
             <div className="InvitationContent__fourthSection">
                 <span className="InvitationContent__fourthSection-title">DETAILS</span>
                 <div className="InvitationContent__fourthSection-caption">
-                    Если вы заблудились, готовите сюрприз или у вас есть какие-то вопросы, вам
-                    поможет наш организатор Анастасия
+                    {`Если ${isPair ? 'вы заблудились, готовите' : 'ты заблудился, готовишь'} сюрприз или есть какие-то вопросы, ${isPair ? 'вам' : 'тебе'}
+                    поможет наш организатор Анастасия`}
                 </div>
                 <Button caption="@francheskamay" onButtonClick={handleTelegramButtonClick} />
             </div>
             <div className="InvitationContent__fifthSection">
-                {!isRSVP ? (
-                    <span className="InvitationContent__fifthSection-caption">
+                <span className="InvitationContent__fifthSection-title">SEATING PLAN</span>
+                <span className="InvitationContent__fifthSection-caption">
+                    Нажав на кнопку ниже можно узнать своё место в зале
+                </span>
+                <span className="InvitationContent__fifthSection-caption_feature">
+                    Скоро здесь появится план рассадки. Следите за обновлениями ;)
+                </span>
+                <Button
+                    caption="посмотреть план"
+                    onButtonClick={handleSitiingPlanButtonClick}
+                    disabled
+                />
+            </div>
+            <div className="InvitationContent__sixthSection">
+                {!isRSVP && (
+                    <span className="InvitationContent__sixthSection-caption">
                         Мы просим {isPair ? 'вас' : 'тебя'} подтвердить присутствие и заполнить
-                        небольшую анкету
-                    </span>
-                ) : (
-                    <span className="InvitationContent__fifthSection-caption">
-                        Спасибо, мы будем очень рады видеть {isPair ? 'вас' : 'тебя'} на нашем
-                        празднике!
+                        анкету
                     </span>
                 )}
                 {isRSVP && (
-                    <div className="InvitationContent__fifthSection-pollGroups">
+                    <div className="InvitationContent__sixthSection-pollGroups">
                         {firstGuest && (
-                            <div className="InvitationContent__fifthSection-pollGroups-item">
-                                <span className="InvitationContent__fifthSection-caption InvitationContent__fifthSection-caption_small">
-                                    {firstGuest.name}, просим заполнить анкету:
-                                </span>
+                            <div className="InvitationContent__sixthSection-pollGroups-item">
+                                {secondGuest && (
+                                    <span className="InvitationContent__sixthSection-caption InvitationContent__sixthSection-caption_small">
+                                        {firstGuest.name}, просим заполнить анкету:
+                                    </span>
+                                )}
                                 <Button
-                                    caption="Анкета"
+                                    caption="анкета"
                                     onButtonClick={() => handleOpenFormButtonClick(firstGuest.id)}
                                 />
                             </div>
                         )}
                         {secondGuest && (
-                            <div className="InvitationContent__fifthSection-pollGroups-item">
-                                <span className="InvitationContent__fifthSection-caption InvitationContent__fifthSection-caption_small">
+                            <div className="InvitationContent__sixthSection-pollGroups-item">
+                                <span className="InvitationContent__sixthSection-caption InvitationContent__sixthSection-caption_small">
                                     {secondGuest.name}, просим заполнить анкету:
                                 </span>
                                 <Button
-                                    caption="Анкета"
+                                    caption="анкета"
                                     onButtonClick={() => handleOpenFormButtonClick(secondGuest.id)}
                                 />
                             </div>
@@ -208,7 +223,13 @@ const GuestInvite = () => {
                     onButtonClick={handleRSVPButtonClick}
                 />
             </div>
-            {/* <Button caption="Заполнить форму" onButtonClick={handleOpenFormButtonClick} /> */}
+            {isRSVP && (
+                <div className="InvitationContent__seventhSection">
+                    <span className="InvitationContent__seventhSection-caption">
+                        До скорой встречи!
+                    </span>
+                </div>
+            )}
         </div>
     );
 };

@@ -33,7 +33,7 @@ function App() {
                 <Route
                     path="/guest-form/:id"
                     element={
-                        <MantineProvider defaultColorScheme="light">
+                        <MantineProvider>
                             <GuestForm />
                         </MantineProvider>
                     }

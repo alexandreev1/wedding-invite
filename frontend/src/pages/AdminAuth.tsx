@@ -13,7 +13,6 @@ const AdminAuth = () => {
     const handleInput = async (val: string) => {
         if (val.length <= 4) {
             setPin(val);
-            setError(false);
         }
         if (val.length === 4) {
             setIsVerifying(true);
@@ -26,6 +25,7 @@ const AdminAuth = () => {
                 navigate('/admin/dashboard');
             } catch (err) {
                 setError(true);
+                setTimeout(() => setError(false), 2000);
                 setPin('');
             } finally {
                 setIsVerifying(false);

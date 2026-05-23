@@ -4,7 +4,7 @@ import { api } from '../shared/api';
 
 interface WeddingState {
     invitations: IInvitation[];
-    currentInvitation: IInvitation | null;
+    currentInvitation: IInvitation | undefined;
     guestData: IGuest | null;
 
     fetchInvitations: () => Promise<void>;
@@ -18,7 +18,7 @@ interface WeddingState {
 
     // Экшены для управления гостями
     addInvitation: (invitation: IInvitation) => Promise<void>;
-    removeInvitation: (id: string) => Promise<void>;
+    removeInvitationById: (id: string) => Promise<void>;
 
     // Экшены для рассадки
     updateGuestSeat: (
@@ -31,6 +31,8 @@ interface WeddingState {
     // Экшен для RSVP (со стороны гостя)
     updateRSVP: (token: string | undefined, status: boolean) => Promise<void>;
 
+    setIsPair: (currInvitation: IInvitation | undefined) => void;
+
     isLoading: boolean;
     isAdmin: boolean;
     isPair: boolean;
@@ -40,11 +42,17 @@ interface WeddingState {
 
 export const useWeddingStore = create<WeddingState>((set, get) => ({
     invitations: [],
-    currentInvitation: null,
+    currentInvitation: undefined,
     guestData: null,
     isLoading: false,
     isAdmin: false,
     isPair: false,
+    setIsPair: (currInvitation) => {
+        if (!currInvitation) {
+            return;
+        }
+        set({ isPair: currInvitation.guests.length > 1 });
+    },
     firstGuest: null,
     secondGuest: null,
 
@@ -74,8 +82,8 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
             set({ currentInvitation: res.data });
 
             const currentInvitation = get().currentInvitation;
+            get().setIsPair(currentInvitation);
             set({
-                isPair: !!currentInvitation && currentInvitation.guests.length > 1,
                 firstGuest: currentInvitation?.guests[0],
                 secondGuest: currentInvitation?.guests[1],
             });
@@ -172,7 +180,7 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
         }
     },
 
-    removeInvitation: async (id: string) => {
+    removeInvitationById: async (id: string) => {
         set({ isLoading: true });
         try {
             await api.delete(`/invitations/${id}`);

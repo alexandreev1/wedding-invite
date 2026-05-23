@@ -46,7 +46,9 @@ export enum GUEST_FORM_BUFFET_ITEMS {
 export enum GUEST_FORM_BANQUET_ITEMS {
     SPARKLING_WINE = 'sparklingWine',
     RED_WINE = 'redWine',
+    RED_WINE_TYPE = 'redWineType',
     WHITE_WINE = 'whiteWine',
+    WHITE_WINE_TYPE = 'whiteWineType',
     WHISKEY = 'whiskey',
     COGNAC = 'cognac',
     SOFT_DRINKS = 'softDrinks',
@@ -81,6 +83,24 @@ export const GUEST_FORM_BANQUET_ITEMS_CAPTIONS = {
     [GUEST_FORM_BANQUET_ITEMS.COGNAC]: 'Коньяк',
     [GUEST_FORM_BANQUET_ITEMS.SOFT_DRINKS]: 'Безалкогольные напитки',
 };
+
+export enum WINE_TYPES {
+    SEMI_SWEET = 'semiSweet',
+    SEMI_DRY = 'semiDry',
+    DRY = 'dry',
+}
+
+export const GUEST_FORM_WINE_SORTS_CAPTIONS = {
+    [WINE_TYPES.SEMI_SWEET]: 'п/сл',
+    [WINE_TYPES.SEMI_DRY]: 'п/сух',
+    [WINE_TYPES.DRY]: 'сух',
+};
+
+export const WINE_TYPE_DATA = [
+    { label: GUEST_FORM_WINE_SORTS_CAPTIONS[WINE_TYPES.SEMI_SWEET], value: WINE_TYPES.SEMI_SWEET },
+    { label: GUEST_FORM_WINE_SORTS_CAPTIONS[WINE_TYPES.SEMI_DRY], value: WINE_TYPES.SEMI_DRY },
+    { label: GUEST_FORM_WINE_SORTS_CAPTIONS[WINE_TYPES.DRY], value: WINE_TYPES.DRY },
+];
 
 export const HOT_DISH_RADIO_GROUP_CONFIG = [
     {

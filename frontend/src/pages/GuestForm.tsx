@@ -18,6 +18,7 @@ import {
 } from '../shared/constants';
 import { useSurveyStore } from '../store/useSurveyStore';
 import { getInitialGuestFormData } from '../shared/utils';
+import WineTypePicker from '../components/WineTypePicker';
 
 function GuestForm() {
     const { id } = useParams();
@@ -135,34 +136,80 @@ function GuestForm() {
                             )
                         }
                     />
-                    <Checkbox
-                        label={GUEST_FORM_BANQUET_ITEMS_CAPTIONS[GUEST_FORM_BANQUET_ITEMS.RED_WINE]}
-                        value={
-                            formData[GUEST_FORM_ITEMS.BANQUET][GUEST_FORM_BANQUET_ITEMS.RED_WINE]
-                        }
-                        onValueChange={(newValue) =>
-                            handleCheckboxValueChange(
-                                newValue,
-                                GUEST_FORM_ITEMS.BANQUET,
-                                GUEST_FORM_BANQUET_ITEMS.RED_WINE,
-                            )
-                        }
-                    />
-                    <Checkbox
-                        label={
-                            GUEST_FORM_BANQUET_ITEMS_CAPTIONS[GUEST_FORM_BANQUET_ITEMS.WHITE_WINE]
-                        }
-                        value={
-                            formData[GUEST_FORM_ITEMS.BANQUET][GUEST_FORM_BANQUET_ITEMS.WHITE_WINE]
-                        }
-                        onValueChange={(newValue) =>
-                            handleCheckboxValueChange(
-                                newValue,
-                                GUEST_FORM_ITEMS.BANQUET,
-                                GUEST_FORM_BANQUET_ITEMS.WHITE_WINE,
-                            )
-                        }
-                    />
+                    <div className="GuestForm__group-inputs_withType">
+                        <Checkbox
+                            label={
+                                GUEST_FORM_BANQUET_ITEMS_CAPTIONS[GUEST_FORM_BANQUET_ITEMS.RED_WINE]
+                            }
+                            value={
+                                formData[GUEST_FORM_ITEMS.BANQUET][
+                                    GUEST_FORM_BANQUET_ITEMS.RED_WINE
+                                ]
+                            }
+                            onValueChange={(newValue) =>
+                                handleCheckboxValueChange(
+                                    newValue,
+                                    GUEST_FORM_ITEMS.BANQUET,
+                                    GUEST_FORM_BANQUET_ITEMS.RED_WINE,
+                                )
+                            }
+                        />
+                        {formData[GUEST_FORM_ITEMS.BANQUET][GUEST_FORM_BANQUET_ITEMS.RED_WINE] && (
+                            <WineTypePicker
+                                value={
+                                    formData[GUEST_FORM_ITEMS.BANQUET][
+                                        GUEST_FORM_BANQUET_ITEMS.RED_WINE_TYPE
+                                    ]
+                                }
+                                onValueChange={(newValue) =>
+                                    handleCheckboxValueChange(
+                                        newValue,
+                                        GUEST_FORM_ITEMS.BANQUET,
+                                        GUEST_FORM_BANQUET_ITEMS.RED_WINE_TYPE,
+                                    )
+                                }
+                            />
+                        )}
+                    </div>
+                    <div className="GuestForm__group-inputs_withType">
+                        <Checkbox
+                            label={
+                                GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
+                                    GUEST_FORM_BANQUET_ITEMS.WHITE_WINE
+                                ]
+                            }
+                            value={
+                                formData[GUEST_FORM_ITEMS.BANQUET][
+                                    GUEST_FORM_BANQUET_ITEMS.WHITE_WINE
+                                ]
+                            }
+                            onValueChange={(newValue) =>
+                                handleCheckboxValueChange(
+                                    newValue,
+                                    GUEST_FORM_ITEMS.BANQUET,
+                                    GUEST_FORM_BANQUET_ITEMS.WHITE_WINE,
+                                )
+                            }
+                        />
+                        {formData[GUEST_FORM_ITEMS.BANQUET][
+                            GUEST_FORM_BANQUET_ITEMS.WHITE_WINE
+                        ] && (
+                            <WineTypePicker
+                                value={
+                                    formData[GUEST_FORM_ITEMS.BANQUET][
+                                        GUEST_FORM_BANQUET_ITEMS.WHITE_WINE_TYPE
+                                    ]
+                                }
+                                onValueChange={(newValue) =>
+                                    handleCheckboxValueChange(
+                                        newValue,
+                                        GUEST_FORM_ITEMS.BANQUET,
+                                        GUEST_FORM_BANQUET_ITEMS.WHITE_WINE_TYPE,
+                                    )
+                                }
+                            />
+                        )}
+                    </div>
                     <Checkbox
                         label={GUEST_FORM_BANQUET_ITEMS_CAPTIONS[GUEST_FORM_BANQUET_ITEMS.WHISKEY]}
                         value={formData[GUEST_FORM_ITEMS.BANQUET][GUEST_FORM_BANQUET_ITEMS.WHISKEY]}
