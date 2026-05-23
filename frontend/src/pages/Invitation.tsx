@@ -1,5 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useCallback, useEffect, useMemo } from 'react';
+import { Text } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { useWeddingStore } from '../store/useWeddingStore';
 import Location from '../components/Location';
 import calendar from '../assets/calendar.svg';
@@ -32,6 +34,20 @@ const GuestInvite = () => {
     }, []);
 
     const handleRSVPButtonClick = useCallback(async () => {
+        if (!isRSVP === false) {
+            return modals.openConfirmModal({
+                title: 'Отменить присутствие?',
+                children: (
+                    <Text size="sm">Вы уверены что хотите перестать дружить с Олей и Сашей?</Text>
+                ),
+                labels: { confirm: 'Да, никогда их не любил', cancel: 'Нет!' },
+                confirmProps: { color: 'red' },
+                onConfirm: async () => {
+                    await updateRSVP(token, !isRSVP);
+                },
+            });
+        }
+
         await updateRSVP(token, !isRSVP);
     }, [updateRSVP, token, isRSVP]);
 

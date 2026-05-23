@@ -30,7 +30,16 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-                <Route path="/invite/:token" element={<Invitation />} />
+                <Route
+                    path="/invite/:token"
+                    element={
+                        <MantineProvider defaultColorScheme="light">
+                            <ModalsProvider>
+                                <Invitation />
+                            </ModalsProvider>
+                        </MantineProvider>
+                    }
+                />
                 <Route
                     path="/guest-form/:id"
                     element={
