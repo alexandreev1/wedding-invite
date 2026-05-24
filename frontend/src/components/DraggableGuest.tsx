@@ -20,7 +20,7 @@ export const DraggableGuest = memo(({ guest }: { guest: IGuest }) => {
                 className="flex items-center gap-3 cursor-all-scroll flex-1"
             >
                 <img src={guest.avatarUrl} className="w-8 h-8 rounded-full" alt="" />
-                <span className="text-sm font-medium">{guest.name}</span>
+                <span className="text-sm font-medium">{`${guest.name} ${guest.lastname}`}</span>
             </div>
 
             {/* Кнопка меню */}
