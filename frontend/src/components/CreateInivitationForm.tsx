@@ -85,7 +85,7 @@ function CreateInvitationForm() {
                 isRSVP: false,
             });
         },
-        [addInvitation],
+        [isPair, addInvitation],
     );
 
     /* const submit = (e: React.FormEvent) => {
