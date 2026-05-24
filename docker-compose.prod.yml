@@ -6,11 +6,10 @@ services:
       - "19098:3000"
     environment:
       - DATABASE_URL=postgresql://alexioll:bphRmbEpXHhb0n@192.168.31.41:9009/wedding-invite
-      - ADMIN_PIN=1234
+      - ADMIN_PIN=0309
       - IS_DOCKER=true
 
   frontend:
     image: registry.exz-vps.ru/alexioll-group/wedding-invite/frontend
     ports:
       - "19099:80"
-
