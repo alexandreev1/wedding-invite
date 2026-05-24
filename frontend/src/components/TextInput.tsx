@@ -23,6 +23,7 @@ function TextInput({ value, onValueChange, label, placeholder }: ITextInputProps
                 input: 'CustomTextInput__input',
                 label: 'CustomTextInput__label',
             }}
+            maxLength={300}
         />
     );
 }
