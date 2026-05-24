@@ -17,7 +17,14 @@ function App() {
             <FullScreenLoader />
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/admin/auth" element={<AdminAuth />} />
+                <Route
+                    path="/admin/auth"
+                    element={
+                        <MantineProvider defaultColorScheme="dark">
+                            <AdminAuth />
+                        </MantineProvider>
+                    }
+                />
                 <Route
                     path="/admin/dashboard"
                     element={

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PinInput } from '@mantine/core';
 import { api } from '../shared/api';
 import { useWeddingStore } from '../store/useWeddingStore';
 
@@ -25,8 +26,10 @@ const AdminAuth = () => {
                 navigate('/admin/dashboard');
             } catch (err) {
                 setError(true);
-                setTimeout(() => setError(false), 2000);
-                setPin('');
+                setTimeout(() => {
+                    setError(false);
+                    setPin('');
+                }, 4000);
             } finally {
                 setIsVerifying(false);
             }
@@ -41,33 +44,19 @@ const AdminAuth = () => {
                 <h2
                     className={`text-2xl mb-8 font-mono tracking-widest ${error ? 'text-red-500' : 'text-stone-400'}`}
                 >
-                    {error ? 'НЕВЕРНЫЙ ПИН' : isVerifying ? 'ПРОВЕРКА...' : 'ADMIN ACCESS'}
+                    {error ? 'WRONG PIN' : isVerifying ? 'CHECKING...' : 'ADMIN ACCESS'}
                 </h2>
 
-                <input
-                    type="password"
+                <PinInput
                     value={pin}
-                    disabled={isVerifying}
-                    onChange={(e) => handleInput(e.target.value)}
-                    className={`bg-transparent border-b-2 text-center text-5xl tracking-[0.5em] w-64 outline-none transition-all pb-2 ${
-                        error
-                            ? 'border-red-500 text-red-500'
-                            : 'border-stone-700 focus:border-yellow-500 text-white'
-                    } disabled:opacity-50`}
+                    onChange={handleInput}
+                    error={error}
+                    size="xl"
+                    length={4}
+                    type="number"
+                    inputMode="numeric"
                     autoFocus
                 />
-
-                {/* Точки для визуализации ввода */}
-                <div className="flex gap-4 mt-8">
-                    {[...Array(4)].map((_, i) => (
-                        <div
-                            key={i}
-                            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                                i < pin.length ? 'bg-yellow-500 scale-125' : 'bg-stone-800'
-                            } ${error ? 'bg-red-500' : ''}`}
-                        />
-                    ))}
-                </div>
             </div>
         </div>
     );
