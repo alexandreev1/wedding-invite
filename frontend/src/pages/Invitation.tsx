@@ -97,7 +97,9 @@ const GuestInvite = () => {
                                   ? 'Дорогой'
                                   : 'Дорогая'}
                         </span>
-                        <span>{guestNames}!</span>
+                        <span className="InvitationContent__firstSection-mainInfo-addressing-names">
+                            {`${guestNames.trim()}!`}
+                        </span>
                     </div>
                     <div className="InvitationContent__firstSection-mainInfo-invitation">
                         {`Приглашаем ${isPair ? 'вас' : 'тебя'} разделить с нами самое важное, трогательное и особенное
