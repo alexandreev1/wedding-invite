@@ -24,8 +24,8 @@ function SurveyTable() {
     }
 
     return (
-        <div className="h-full w-full p-6">
-            <Table stickyHeader stickyHeaderOffset={20} withTableBorder withColumnBorders>
+        <div className="h-full w-full p-6 overflow-x-scroll">
+            <Table stickyHeader withTableBorder withColumnBorders>
                 <Table.Thead>
                     <Table.Tr>
                         <Table.Th>Имя гостя</Table.Th>
