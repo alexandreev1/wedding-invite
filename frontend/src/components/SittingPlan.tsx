@@ -87,7 +87,7 @@ const SittingPlan = () => {
 
     return (
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-            <div className="h-screen w-full flex bg-stone-50 overflow-hidden">
+            <div className="h-full w-full flex bg-stone-50 overflow-hidden">
                 <aside className="w-80 bg-white border-r p-6 overflow-y-auto">
                     <div className="p-6 border-b border-stone-100">
                         <h2 className="text-xl font-serif mb-4 text-stone-800">

@@ -1,4 +1,5 @@
 import { memo, useMemo } from 'react';
+import { Table } from '@mantine/core';
 import { useWeddingStore } from '../store/useWeddingStore';
 import '../styles/SurveyTable.less';
 import type { IGuestFormResult } from '../types/wedding';
@@ -23,183 +24,196 @@ function SurveyTable() {
     }
 
     return (
-        <div className="SurveyTable">
-            <div className="SurveyTable__row">
-                <div className="SurveyTable__column">Имя гостя</div>
-                <div className="SurveyTable__column">Напитки на фуршете</div>
-                <div className="SurveyTable__column">Напитки на банкете</div>
-                <div className="SurveyTable__column">Тип вина</div>
-                <div className="SurveyTable__column">Доп. информация</div>
-                <div className="SurveyTable__column">Горячее блюдо</div>
-                <div className="SurveyTable__column">Трансфер</div>
-            </div>
-            {guests.map((guest, index) => {
-                const guestFormData =
-                    guest.formResult && (JSON.parse(guest.formResult) as IGuestFormResult);
-
-                return (
-                    <div className="SurveyTable__row" key={index}>
-                        <div className="SurveyTable__column">
-                            <div>{`${guest.name} ${guest.lastname}`}</div>
-                            {guest.comment && <div>({guest.comment})</div>}
-                        </div>
-                        {!guestFormData ? (
-                            <div className="SurveyTable__column">Форма пуста</div>
-                        ) : (
-                            <>
-                                <div className="SurveyTable__column">
-                                    {guestFormData[GUEST_FORM_ITEMS.BUFFET][
-                                        GUEST_FORM_BUFFET_ITEMS.SPARKLING_WINE
-                                    ] && (
-                                        <div>
+        <div className="h-full w-full p-6">
+            <Table stickyHeader stickyHeaderOffset={20} withTableBorder withColumnBorders>
+                <Table.Thead>
+                    <Table.Tr>
+                        <Table.Th>Имя гостя</Table.Th>
+                        <Table.Th>Напитки на фуршете</Table.Th>
+                        <Table.Th>Напитки на банкете</Table.Th>
+                        <Table.Th>Тип вина</Table.Th>
+                        <Table.Th>Доп. информация</Table.Th>
+                        <Table.Th>Горячее блюдо</Table.Th>
+                        <Table.Th>Трансфер</Table.Th>
+                    </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                    {guests.map((guest) => {
+                        const guestFormData =
+                            guest.formResult && (JSON.parse(guest.formResult) as IGuestFormResult);
+                        return (
+                            <Table.Tr key={guest.id}>
+                                <Table.Td>
+                                    <div>
+                                        <div>{`${guest.name} ${guest.lastname}`}</div>
+                                        {guest.comment && <div>({guest.comment})</div>}
+                                    </div>
+                                </Table.Td>
+                                {!guestFormData ? (
+                                    <Table.Td>Форма пуста</Table.Td>
+                                ) : (
+                                    <>
+                                        <Table.Td>
+                                            {guestFormData[GUEST_FORM_ITEMS.BUFFET][
+                                                GUEST_FORM_BUFFET_ITEMS.SPARKLING_WINE
+                                            ] && (
+                                                <div>
+                                                    {
+                                                        GUEST_FORM_BUFFET_ITEMS_CAPTIONS[
+                                                            GUEST_FORM_BUFFET_ITEMS.SPARKLING_WINE
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                            {guestFormData[GUEST_FORM_ITEMS.BUFFET][
+                                                GUEST_FORM_BUFFET_ITEMS.BEER
+                                            ] && (
+                                                <div>
+                                                    {
+                                                        GUEST_FORM_BUFFET_ITEMS_CAPTIONS[
+                                                            GUEST_FORM_BUFFET_ITEMS.BEER
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                            {guestFormData[GUEST_FORM_ITEMS.BUFFET][
+                                                GUEST_FORM_BUFFET_ITEMS.SOFT_DRINKS
+                                            ] && (
+                                                <div>
+                                                    {
+                                                        GUEST_FORM_BUFFET_ITEMS_CAPTIONS[
+                                                            GUEST_FORM_BUFFET_ITEMS.SOFT_DRINKS
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                        </Table.Td>
+                                        <Table.Td>
+                                            {guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                GUEST_FORM_BANQUET_ITEMS.SPARKLING_WINE
+                                            ] && (
+                                                <div>
+                                                    {
+                                                        GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
+                                                            GUEST_FORM_BANQUET_ITEMS.SPARKLING_WINE
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                            {guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                GUEST_FORM_BANQUET_ITEMS.RED_WINE
+                                            ] && (
+                                                <div>
+                                                    {
+                                                        GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
+                                                            GUEST_FORM_BANQUET_ITEMS.RED_WINE
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                            {guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                GUEST_FORM_BANQUET_ITEMS.WHITE_WINE
+                                            ] && (
+                                                <div>
+                                                    {
+                                                        GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
+                                                            GUEST_FORM_BANQUET_ITEMS.WHITE_WINE
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                            {guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                GUEST_FORM_BANQUET_ITEMS.WHISKEY
+                                            ] && (
+                                                <div>
+                                                    {
+                                                        GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
+                                                            GUEST_FORM_BANQUET_ITEMS.WHISKEY
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                            {guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                GUEST_FORM_BANQUET_ITEMS.COGNAC
+                                            ] && (
+                                                <div>
+                                                    {
+                                                        GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
+                                                            GUEST_FORM_BANQUET_ITEMS.COGNAC
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                            {guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                GUEST_FORM_BANQUET_ITEMS.SOFT_DRINKS
+                                            ] && (
+                                                <div>
+                                                    {
+                                                        GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
+                                                            GUEST_FORM_BANQUET_ITEMS.SOFT_DRINKS
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                        </Table.Td>
+                                        <Table.Td>
+                                            {guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                GUEST_FORM_BANQUET_ITEMS.RED_WINE
+                                            ] && (
+                                                <div>
+                                                    Красное вино: &nbsp;
+                                                    {
+                                                        GUEST_FORM_WINE_SORTS_CAPTIONS[
+                                                            guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                                GUEST_FORM_BANQUET_ITEMS
+                                                                    .RED_WINE_TYPE
+                                                            ]
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                            {guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                GUEST_FORM_BANQUET_ITEMS.WHITE_WINE
+                                            ] && (
+                                                <div>
+                                                    Белое вино: &nbsp;
+                                                    {
+                                                        GUEST_FORM_WINE_SORTS_CAPTIONS[
+                                                            guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                                GUEST_FORM_BANQUET_ITEMS
+                                                                    .WHITE_WINE_TYPE
+                                                            ]
+                                                        ]
+                                                    }
+                                                </div>
+                                            )}
+                                        </Table.Td>
+                                        <Table.Td>
                                             {
-                                                GUEST_FORM_BUFFET_ITEMS_CAPTIONS[
-                                                    GUEST_FORM_BUFFET_ITEMS.SPARKLING_WINE
+                                                guestFormData[GUEST_FORM_ITEMS.BANQUET][
+                                                    GUEST_FORM_BANQUET_ITEMS.ADDITIONAL_INFO
                                                 ]
                                             }
-                                        </div>
-                                    )}
-                                    {guestFormData[GUEST_FORM_ITEMS.BUFFET][
-                                        GUEST_FORM_BUFFET_ITEMS.BEER
-                                    ] && (
-                                        <div>
-                                            {
-                                                GUEST_FORM_BUFFET_ITEMS_CAPTIONS[
-                                                    GUEST_FORM_BUFFET_ITEMS.BEER
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                    {guestFormData[GUEST_FORM_ITEMS.BUFFET][
-                                        GUEST_FORM_BUFFET_ITEMS.SOFT_DRINKS
-                                    ] && (
-                                        <div>
-                                            {
-                                                GUEST_FORM_BUFFET_ITEMS_CAPTIONS[
-                                                    GUEST_FORM_BUFFET_ITEMS.SOFT_DRINKS
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="SurveyTable__column">
-                                    {guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                        GUEST_FORM_BANQUET_ITEMS.SPARKLING_WINE
-                                    ] && (
-                                        <div>
-                                            {
-                                                GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
-                                                    GUEST_FORM_BANQUET_ITEMS.SPARKLING_WINE
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                    {guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                        GUEST_FORM_BANQUET_ITEMS.RED_WINE
-                                    ] && (
-                                        <div>
-                                            {
-                                                GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
-                                                    GUEST_FORM_BANQUET_ITEMS.RED_WINE
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                    {guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                        GUEST_FORM_BANQUET_ITEMS.WHITE_WINE
-                                    ] && (
-                                        <div>
-                                            {
-                                                GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
-                                                    GUEST_FORM_BANQUET_ITEMS.WHITE_WINE
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                    {guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                        GUEST_FORM_BANQUET_ITEMS.WHISKEY
-                                    ] && (
-                                        <div>
-                                            {
-                                                GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
-                                                    GUEST_FORM_BANQUET_ITEMS.WHISKEY
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                    {guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                        GUEST_FORM_BANQUET_ITEMS.COGNAC
-                                    ] && (
-                                        <div>
-                                            {
-                                                GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
-                                                    GUEST_FORM_BANQUET_ITEMS.COGNAC
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                    {guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                        GUEST_FORM_BANQUET_ITEMS.SOFT_DRINKS
-                                    ] && (
-                                        <div>
-                                            {
-                                                GUEST_FORM_BANQUET_ITEMS_CAPTIONS[
-                                                    GUEST_FORM_BANQUET_ITEMS.SOFT_DRINKS
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="SurveyTable__column">
-                                    {guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                        GUEST_FORM_BANQUET_ITEMS.RED_WINE
-                                    ] && (
-                                        <div>
-                                            Красное вино: &nbsp;
-                                            {
-                                                GUEST_FORM_WINE_SORTS_CAPTIONS[
-                                                    guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                                        GUEST_FORM_BANQUET_ITEMS.RED_WINE_TYPE
-                                                    ]
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                    {guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                        GUEST_FORM_BANQUET_ITEMS.WHITE_WINE
-                                    ] && (
-                                        <div>
-                                            Белое вино: &nbsp;
-                                            {
-                                                GUEST_FORM_WINE_SORTS_CAPTIONS[
-                                                    guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                                        GUEST_FORM_BANQUET_ITEMS.WHITE_WINE_TYPE
-                                                    ]
-                                                ]
-                                            }
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="SurveyTable__column">
-                                    {
-                                        guestFormData[GUEST_FORM_ITEMS.BANQUET][
-                                            GUEST_FORM_BANQUET_ITEMS.ADDITIONAL_INFO
-                                        ]
-                                    }
-                                </div>
-                                <div className="SurveyTable__column">
-                                    {guestFormData[GUEST_FORM_ITEMS.HOT_DISH] &&
-                                        HOT_DISH_CAPTIONS[guestFormData[GUEST_FORM_ITEMS.HOT_DISH]]}
-                                </div>
-                                <div className="SurveyTable__column">
-                                    {guestFormData[GUEST_FORM_ITEMS.TRANSFER] &&
-                                        TRANSFER_CAPTIONS[guestFormData[GUEST_FORM_ITEMS.TRANSFER]]}
-                                </div>
-                            </>
-                        )}
-                    </div>
-                );
-            })}
+                                        </Table.Td>
+                                        <Table.Td>
+                                            {guestFormData[GUEST_FORM_ITEMS.HOT_DISH] &&
+                                                HOT_DISH_CAPTIONS[
+                                                    guestFormData[GUEST_FORM_ITEMS.HOT_DISH]
+                                                ]}
+                                        </Table.Td>
+                                        <Table.Td>
+                                            {guestFormData[GUEST_FORM_ITEMS.TRANSFER] &&
+                                                TRANSFER_CAPTIONS[
+                                                    guestFormData[GUEST_FORM_ITEMS.TRANSFER]
+                                                ]}
+                                        </Table.Td>
+                                    </>
+                                )}
+                            </Table.Tr>
+                        );
+                    })}
+                </Table.Tbody>
+            </Table>
         </div>
     );
 }
