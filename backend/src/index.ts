@@ -74,6 +74,8 @@ app.post("/api/invitations", async (req, res) => {
         guests: {
           create: guests.map((g: Record<string, string | number>) => ({
             name: g.name,
+            lastname: g.lastname,
+            comment: g.comment,
             gender: g.gender,
             avatarUrl: g.avatarUrl,
             tableId: g.tableId,
@@ -85,7 +87,7 @@ app.post("/api/invitations", async (req, res) => {
     });
     res.json(result);
   } catch (error) {
-    res.status(500).json({ error: "Ошибка при создании" });
+    res.status(500).json({ error: `Ошибка при создании ${error}` });
   }
 });
 

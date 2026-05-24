@@ -16,6 +16,8 @@ model Invitation {
 model Guest {
   id           String     @id @default(uuid())
   name         String
+  lastname     String
+  comment      String?
   gender       String
   avatarUrl    String
   tableId      Int?

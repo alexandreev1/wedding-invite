@@ -18,12 +18,14 @@ export type TGender = 'male' | 'female';
 export interface IGuest {
     id: string;
     name: string;
+    lastname: string;
+    comment?: string;
     gender: TGender;
     avatarUrl: string;
     tableId: number | null;
     seatNumber: number | null;
     invitationId: string;
-    formResult: string | undefined;
+    formResult: string | null;
 }
 
 export interface IInvitation {
