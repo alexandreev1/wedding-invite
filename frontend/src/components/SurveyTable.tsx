@@ -41,7 +41,7 @@ function SurveyTable() {
                     <div className="SurveyTable__row" key={index}>
                         <div className="SurveyTable__column">
                             <div>{`${guest.name} ${guest.lastname}`}</div>
-                            <div>({guest.comment})</div>
+                            {guest.comment && <div>({guest.comment})</div>}
                         </div>
                         {!guestFormData ? (
                             <div className="SurveyTable__column">Форма пуста</div>

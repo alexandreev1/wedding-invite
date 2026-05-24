@@ -20,6 +20,7 @@ import {
 import { useSurveyStore } from '../store/useSurveyStore';
 import { getInitialGuestFormData } from '../shared/utils';
 import WineTypePicker from '../components/WineTypePicker';
+import guestFormSmile1 from '../assets/guest_form_smile.png';
 
 function GuestForm() {
     const { id } = useParams();
@@ -78,6 +79,13 @@ function GuestForm() {
     return (
         <div className="GuestForm">
             <span className="GuestForm__title">GUEST FORM</span>
+            <div className="GuestForm__welcome">
+                <span className="GuestForm__welcome-caption">
+                    Привет, {guestData.name}! Просим заполнить для нас эту анкету. <br />{' '}
+                    Постараемся учесть все твои пожелания
+                </span>
+                <img className="w-20" src={guestFormSmile1} alt="" />
+            </div>
             <div className="GuestForm__group">
                 <span className="GuestForm__group-caption">
                     {GUEST_FORM_ITEMS_CAPTIONS[GUEST_FORM_ITEMS.BUFFET]}:

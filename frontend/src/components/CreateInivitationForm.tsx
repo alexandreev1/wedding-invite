@@ -88,53 +88,6 @@ function CreateInvitationForm() {
         [isPair, addInvitation],
     );
 
-    /* const submit = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!guest1.name || (isPair && !guest2.name)) {
-            return;
-        }
-
-        const invitationId = crypto.randomUUID();
-
-        const guests: IGuest[] = [
-            {
-                id: crypto.randomUUID(),
-                invitationId: invitationId,
-                name: guest1.name,
-                lastname: guest1.lastname,
-                comment: guest1.comment,
-                gender: guest1.gender,
-                avatarUrl: guest1.photo || getAvatarUrl(guest1.name), // Если нет фото, берем Boring Avatars
-                tableId: null,
-                seatNumber: null,
-                formResult: undefined,
-            },
-        ];
-
-        if (isPair) {
-            guests.push({
-                id: crypto.randomUUID(),
-                invitationId: invitationId,
-                name: guest2.name,
-                lastname: guest2.lastname,
-                comment: guest2.comment,
-                gender: guest2.gender,
-                avatarUrl: guest2.photo || getAvatarUrl(guest2.name),
-                tableId: null,
-                seatNumber: null,
-                formResult: undefined,
-            });
-        }
-
-        addInvitation({
-            id: invitationId,
-            token: getToken(invitationId),
-            guests,
-            isRSVP: false,
-        });
-    }; */
-
     return (
         <>
             <Group align="center" gap={0} justify="space-between" mb="md">

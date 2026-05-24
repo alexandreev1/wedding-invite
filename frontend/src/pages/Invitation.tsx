@@ -179,7 +179,7 @@ const GuestInvite = () => {
             <div className="InvitationContent__fourthSection">
                 <span className="InvitationContent__fourthSection-title">DETAILS</span>
                 <div className="InvitationContent__fourthSection-caption">
-                    {`Если ${isPair ? 'вы заблудились, готовите' : 'ты заблудился, готовишь'} сюрприз или есть какие-то вопросы, ${isPair ? 'вам' : 'тебе'}
+                    {`Если ${isPair ? 'вы заблудились, готовите' : `ты ${firstGuest?.gender === 'male' ? 'заблудился' : 'заблудилась'}, готовишь`} сюрприз или есть какие-то вопросы, ${isPair ? 'вам' : 'тебе'}
                     поможет наш организатор Анастасия`}
                 </div>
                 <Button caption="@francheskamay" onButtonClick={handleTelegramButtonClick} />
