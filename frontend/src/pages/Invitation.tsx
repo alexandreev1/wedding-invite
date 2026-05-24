@@ -213,7 +213,7 @@ const GuestInvite = () => {
                             <div className="InvitationContent__sixthSection-pollGroups-item">
                                 {secondGuest && (
                                     <span className="InvitationContent__sixthSection-caption InvitationContent__sixthSection-caption_small">
-                                        {firstGuest.name}, просим заполнить анкету:
+                                        {firstGuest.name?.trim()}, просим заполнить анкету:
                                     </span>
                                 )}
                                 <Button
@@ -225,7 +225,7 @@ const GuestInvite = () => {
                         {secondGuest && (
                             <div className="InvitationContent__sixthSection-pollGroups-item">
                                 <span className="InvitationContent__sixthSection-caption InvitationContent__sixthSection-caption_small">
-                                    {secondGuest.name}, просим заполнить анкету:
+                                    {secondGuest.name?.trim()}, просим заполнить анкету:
                                 </span>
                                 <Button
                                     caption="анкета"

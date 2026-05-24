@@ -52,9 +52,9 @@ function CreateInvitationForm() {
                 {
                     id: crypto.randomUUID(),
                     invitationId: invitationId,
-                    name: values.firstGuestName,
-                    lastname: values.firstGuestLastname,
-                    comment: values.firstGuestComment,
+                    name: values.firstGuestName?.trim(),
+                    lastname: values.firstGuestLastname?.trim(),
+                    comment: values.firstGuestComment?.trim(),
                     gender: values.firstGuestGender,
                     avatarUrl: getAvatarUrl(values.firstGuestName), // Если нет фото, берем Boring Avatars
                     tableId: null,
@@ -67,9 +67,9 @@ function CreateInvitationForm() {
                 guests.push({
                     id: crypto.randomUUID(),
                     invitationId: invitationId,
-                    name: values.secondGuestName,
-                    lastname: values.secondGuestLastname,
-                    comment: values.secondGuestComment,
+                    name: values.secondGuestName?.trim(),
+                    lastname: values.secondGuestLastname?.trim(),
+                    comment: values.secondGuestComment?.trim(),
                     gender: values.secondGuestGender,
                     avatarUrl: getAvatarUrl(values.secondGuestName),
                     tableId: null,
@@ -122,7 +122,7 @@ function CreateInvitationForm() {
                     />
                     <TextInput
                         label="Комментарий"
-                        placeholder="Друг со стороный жениха"
+                        placeholder="Друг со стороны жениха"
                         key={form.key('firstGuestComment')}
                         {...form.getInputProps('firstGuestComment')}
                     />
