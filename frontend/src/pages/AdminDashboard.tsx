@@ -25,10 +25,10 @@ const AdminDashboard = () => {
                         Опрос
                     </Tabs.Tab>
                 </Tabs.List>
-                <Tabs.Panel value="sittingPlan" className="h-full w-full">
+                <Tabs.Panel value="sittingPlan" className="h-full w-full overflow-hidden">
                     <SittingPlan />
                 </Tabs.Panel>
-                <Tabs.Panel value="survey" className="h-full w-full">
+                <Tabs.Panel value="survey" className="h-full w-full overflow-hidden">
                     <SurveyTable />
                 </Tabs.Panel>
             </Tabs>
