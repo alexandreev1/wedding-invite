@@ -1,0 +1,21 @@
+.InvitationListItem {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    &__actions {
+        position: absolute;
+        top: 16px;
+        right: 12px;
+        opacity: 0;
+    }
+
+    &:hover {
+        .InvitationListItem__actions {
+            opacity: 1;
+        }
+    }
+}

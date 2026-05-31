@@ -1,33 +1,36 @@
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import { Menu } from '@mantine/core';
-import { EllipsisVertical, ExternalLink, Trash2, UserMinus } from 'lucide-react';
+import { EllipsisVertical, ExternalLink, Trash2, UserRoundPen } from 'lucide-react';
 import { useWeddingStore } from '../store/useWeddingStore';
-import type { IGuest } from '../types/wedding';
+import type { IInvitation } from '../types/wedding';
 import { modals } from '@mantine/modals';
+import clsx from 'clsx';
 
-function GuestActionsMenu({ guest }: { guest: IGuest }) {
-    const { invitations, removeInvitationById, setIsPair, isPair } = useWeddingStore();
-    const currentInvitation = useMemo(
-        () => invitations.find((inv) => inv.id === guest.invitationId),
-        [invitations, guest],
-    );
+function GuestActionsMenu({
+    className,
+    invitation,
+}: {
+    className: string;
+    invitation: IInvitation;
+}) {
+    const { removeInvitationById } = useWeddingStore();
 
     const handleCopyLinkClick = useCallback(
         (e: React.MouseEvent) => {
             e.stopPropagation();
 
-            if (!currentInvitation) {
-                return alert('Отсутствует приглашение для этого гостя');
+            if (!invitation) {
+                return alert('Отсутствует приглашение');
             }
 
-            const link = `${window.location.origin}/invite/${currentInvitation.token}`;
+            const link = `${window.location.origin}/invite/${invitation.token}`;
 
             navigator.clipboard.writeText(link);
         },
-        [currentInvitation],
+        [invitation],
     );
 
-    const handleGuestDeleteClick = useCallback(() => {}, []);
+    const handleInvitationEditClick = useCallback(() => {}, []);
 
     const handleInvitationDeleteClick = useCallback(
         (e: React.MouseEvent) => {
@@ -36,24 +39,20 @@ function GuestActionsMenu({ guest }: { guest: IGuest }) {
                 title: 'Вы действительно хотите удалить приглашение?',
                 labels: { confirm: 'Да', cancel: 'Отмена' },
                 onConfirm: async () => {
-                    await removeInvitationById(guest.invitationId);
+                    await removeInvitationById(invitation.id);
                 },
             });
         },
-        [guest, removeInvitationById],
+        [invitation, removeInvitationById],
     );
-
-    useEffect(() => {
-        setIsPair(currentInvitation);
-    }, [setIsPair, currentInvitation]);
 
     return (
         <Menu shadow="md" width={220}>
             <Menu.Target>
                 <EllipsisVertical
-                    className="opacity-0 group-hover:opacity-100 cursor-pointer"
+                    className={clsx(className, 'cursor-pointer')}
                     color="gray"
-                    size={20}
+                    size={24}
                 />
             </Menu.Target>
             <Menu.Dropdown>
@@ -61,15 +60,13 @@ function GuestActionsMenu({ guest }: { guest: IGuest }) {
                     Копировать ссылку
                 </Menu.Item>
                 <Menu.Divider />
-                {isPair && (
-                    <Menu.Item
-                        onClick={handleGuestDeleteClick}
-                        color="orange"
-                        leftSection={<UserMinus size={16} />}
-                    >
-                        Удалить гостя
-                    </Menu.Item>
-                )}
+                <Menu.Item
+                    onClick={handleInvitationEditClick}
+                    color="yellow"
+                    leftSection={<UserRoundPen size={16} />}
+                >
+                    Редактировать приглашение
+                </Menu.Item>
                 <Menu.Item
                     onClick={handleInvitationDeleteClick}
                     color="red"

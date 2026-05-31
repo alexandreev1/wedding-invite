@@ -5,12 +5,12 @@ import { Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { useWeddingStore } from '../store/useWeddingStore';
-import { DraggableGuest } from '../components/DraggableGuest';
 import { DroppableTable } from '../components/DroppableTable';
 import TableEditor from '../components/TableEditor';
 import CreateInvitationForm from '../components/CreateInivitationForm';
 import { TABLES } from '../shared/constants';
 import type { IGuest, ITable } from '../types/wedding';
+import InvitationListItem from './InvitationListItem';
 
 const SittingPlan = () => {
     const { updateGuestSeat, removeGuestFromTable, invitations } = useWeddingStore();
@@ -96,11 +96,9 @@ const SittingPlan = () => {
                         <CreateInvitationForm />
                     </div>
                     <div className="space-y-3">
-                        {allGuests
-                            .filter((g) => g.tableId === null)
-                            .map((guest: IGuest) => (
-                                <DraggableGuest key={guest.id} guest={guest} />
-                            ))}
+                        {invitations.map((invitation) => (
+                            <InvitationListItem invitation={invitation} />
+                        ))}
                     </div>
                 </aside>
                 <main className="flex-1 p-10 flex flex-col items-center overflow-y-auto">
