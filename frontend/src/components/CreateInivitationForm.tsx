@@ -84,85 +84,83 @@ function CreateInvitationForm() {
                 guests,
                 isRSVP: false,
             });
+
+            form.reset();
+            setIsPair(false);
         },
         [isPair, addInvitation],
     );
 
     return (
-        <>
+        <form onSubmit={form.onSubmit(handleFormSubmit)} className="p-6">
             <Group align="center" gap={0} justify="space-between" mb="md">
                 <Text>Тип приглашения</Text>
                 <Switch checked={isPair} onChange={handleIsPairChange} label="Пара" />
             </Group>
-            <form
-                onSubmit={form.onSubmit(handleFormSubmit)}
-                className="border-2  border-gray-400 rounded-md p-2"
-            >
+            <Group align="center" mb="lg" gap={4}>
+                <GenderSwitch
+                    key={form.key('firstGuestGender')}
+                    value={form.values.firstGuestGender}
+                    onValueChange={(firstGuestGender) => {
+                        form.setValues({ ...form.values, firstGuestGender });
+                    }}
+                />
+                <TextInput
+                    label="Имя"
+                    placeholder="Василий"
+                    key={form.key('firstGuestName')}
+                    withAsterisk
+                    {...form.getInputProps('firstGuestName')}
+                />
+                <TextInput
+                    label="Фамилия"
+                    placeholder="Барбашев"
+                    key={form.key('firstGuestLastname')}
+                    withAsterisk
+                    {...form.getInputProps('firstGuestLastname')}
+                />
+                <TextInput
+                    label="Комментарий"
+                    placeholder="Друг со стороны жениха"
+                    key={form.key('firstGuestComment')}
+                    {...form.getInputProps('firstGuestComment')}
+                />
+            </Group>
+            {isPair && (
                 <Group align="center" mb="lg" gap={4}>
                     <GenderSwitch
-                        key={form.key('firstGuestGender')}
-                        value={form.values.firstGuestGender}
-                        onValueChange={(firstGuestGender) => {
-                            form.setValues({ ...form.values, firstGuestGender });
+                        key={form.key('secondGuestGender')}
+                        value={form.values.secondGuestGender}
+                        onValueChange={(secondGuestGender) => {
+                            form.setValues({ ...form.values, secondGuestGender });
                         }}
                     />
                     <TextInput
                         label="Имя"
-                        placeholder="Василий"
-                        key={form.key('firstGuestName')}
+                        placeholder="Ольга"
+                        key={form.key('secondGuestName')}
                         withAsterisk
-                        {...form.getInputProps('firstGuestName')}
+                        {...form.getInputProps('secondGuestName')}
                     />
                     <TextInput
                         label="Фамилия"
-                        placeholder="Барбашев"
-                        key={form.key('firstGuestLastname')}
+                        placeholder="Барбашева"
+                        key={form.key('secondGuestLastname')}
                         withAsterisk
-                        {...form.getInputProps('firstGuestLastname')}
+                        {...form.getInputProps('secondGuestLastname')}
                     />
                     <TextInput
                         label="Комментарий"
-                        placeholder="Друг со стороны жениха"
-                        key={form.key('firstGuestComment')}
-                        {...form.getInputProps('firstGuestComment')}
+                        placeholder="Подруга со стороный жениха, жена Васи"
+                        key={form.key('secondGuestComment')}
+                        {...form.getInputProps('secondGuestComment')}
                     />
                 </Group>
-                {isPair && (
-                    <Group align="center" mb="lg" gap={4}>
-                        <GenderSwitch
-                            key={form.key('secondGuestGender')}
-                            value={form.values.secondGuestGender}
-                            onValueChange={(secondGuestGender) => {
-                                form.setValues({ ...form.values, secondGuestGender });
-                            }}
-                        />
-                        <TextInput
-                            label="Имя"
-                            placeholder="Ольга"
-                            key={form.key('secondGuestName')}
-                            withAsterisk
-                            {...form.getInputProps('secondGuestName')}
-                        />
-                        <TextInput
-                            label="Фамилия"
-                            placeholder="Барбашева"
-                            key={form.key('secondGuestLastname')}
-                            withAsterisk
-                            {...form.getInputProps('secondGuestLastname')}
-                        />
-                        <TextInput
-                            label="Комментарий"
-                            placeholder="Подруга со стороный жениха, жена Васи"
-                            key={form.key('secondGuestComment')}
-                            {...form.getInputProps('secondGuestComment')}
-                        />
-                    </Group>
-                )}
-                <Group justify="flex-end">
-                    <Button type="submit">Создать</Button>
-                </Group>
-            </form>
-        </>
+            )}
+            <Group justify="flex-end">
+                <Button type="submit">Создать</Button>
+            </Group>
+        </form>
     );
 }
 
