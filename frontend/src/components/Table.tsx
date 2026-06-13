@@ -2,7 +2,7 @@ import { Text } from '@mantine/core';
 import type { ITable, IGuest } from '../types/wedding';
 import { useCallback } from 'react';
 
-export const DroppableTable = ({
+export const Table = ({
     table,
     seatedGuests,
     onClick,
@@ -14,7 +14,7 @@ export const DroppableTable = ({
     const handleRootClick = useCallback(() => onClick(table.id), [table]);
 
     return (
-        <div className="flex gap-1" onClick={handleRootClick}>
+        <div className="flex gap-1 cursor-pointer" onClick={handleRootClick}>
             <div className="flex flex-col justify-evenly">
                 <MiniSeat guest={seatedGuests.find((g) => g.seatNumber === 1)} />
                 <MiniSeat guest={seatedGuests.find((g) => g.seatNumber === 1)} />

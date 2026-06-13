@@ -95,3 +95,8 @@ export interface IWineTypePicker {
     value: WINE_TYPES;
     onValueChange: (type: WINE_TYPES) => void;
 }
+
+export interface IInvitationFormProps {
+    invitation?: IInvitation | null;
+    closeFormCallback: () => void;
+}

@@ -5,7 +5,13 @@ import GuestItem from './GuestItem';
 import '../styles/InvitationListItem.less';
 import GuestActionsMenu from './GuestActionsMenu';
 
-function InvitationListItem({ invitation }: { invitation: IInvitation }) {
+function InvitationListItem({
+    invitation,
+    editHandler,
+}: {
+    invitation: IInvitation;
+    editHandler: (invitation: IInvitation) => void;
+}) {
     if (!invitation || !invitation.guests) {
         return null;
     }
@@ -16,9 +22,11 @@ function InvitationListItem({ invitation }: { invitation: IInvitation }) {
                 {invitation.guests.map((guest) => (
                     <GuestItem key={guest.id} guest={guest} />
                 ))}
-
-                {/* Кнопка меню */}
-                <GuestActionsMenu className="InvitationListItem__actions" invitation={invitation} />
+                <GuestActionsMenu
+                    className="InvitationListItem__actions"
+                    invitation={invitation}
+                    editHandler={editHandler}
+                />
             </>
         </Paper>
     );

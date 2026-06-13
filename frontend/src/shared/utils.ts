@@ -5,7 +5,7 @@ import {
     GUEST_FORM_ITEMS,
     WINE_TYPES,
 } from './constants';
-import type { IGuestFormResult } from '../types/wedding';
+import type { IGuest, IGuestFormResult, IInvitation, TGender } from '../types/wedding';
 
 // Функция для формирования чистого URL аватарки
 export function getAvatarUrl(name: string) {
@@ -37,5 +37,58 @@ export function getInitialGuestFormData(): IGuestFormResult {
         },
         [GUEST_FORM_ITEMS.HOT_DISH]: null,
         [GUEST_FORM_ITEMS.TRANSFER]: null,
+    };
+}
+
+export function getFormInitialData(invitation?: IInvitation | null) {
+    if (invitation) {
+        const [guest1, guest2] = invitation.guests;
+
+        return {
+            firstGuestName: guest1.name,
+            firstGuestLastname: guest1.lastname,
+            firstGuestComment: guest1.comment,
+            firstGuestPhoto: guest1.avatarUrl,
+            firstGuestGender: guest1.gender,
+            secondGuestName: guest2?.name || '',
+            secondGuestLastname: guest2?.lastname || '',
+            secondGuestComment: guest2?.comment || '',
+            secondGuestPhoto: guest2?.avatarUrl || '',
+            secondGuestGender: guest2?.gender || 'female',
+        };
+    }
+
+    return {
+        firstGuestName: '',
+        firstGuestLastname: '',
+        firstGuestComment: '',
+        firstGuestPhoto: '',
+        firstGuestGender: 'male' as TGender,
+        secondGuestName: '',
+        secondGuestLastname: '',
+        secondGuestComment: '',
+        secondGuestPhoto: '',
+        secondGuestGender: 'female' as TGender,
+    };
+}
+
+export function getInitialGuestInfo(data: {
+    name: string;
+    lastname: string;
+    invitationId: string;
+    gender: TGender;
+    comment?: string;
+}): IGuest {
+    return {
+        id: crypto.randomUUID(),
+        invitationId: data.invitationId,
+        name: data.name.trim(),
+        lastname: data.lastname.trim(),
+        comment: data.comment?.trim(),
+        gender: data.gender,
+        avatarUrl: getAvatarUrl(data.name),
+        tableId: null,
+        seatNumber: null,
+        formResult: null,
     };
 }

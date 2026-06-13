@@ -1,17 +1,19 @@
 import { memo, useCallback } from 'react';
-import { Menu } from '@mantine/core';
 import { EllipsisVertical, ExternalLink, Trash2, UserRoundPen } from 'lucide-react';
+import { Menu } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { useWeddingStore } from '../store/useWeddingStore';
 import type { IInvitation } from '../types/wedding';
-import { modals } from '@mantine/modals';
 import clsx from 'clsx';
 
 function GuestActionsMenu({
     className,
     invitation,
+    editHandler,
 }: {
     className: string;
     invitation: IInvitation;
+    editHandler: (invitation: IInvitation) => void;
 }) {
     const { removeInvitationById } = useWeddingStore();
 
@@ -30,7 +32,9 @@ function GuestActionsMenu({
         [invitation],
     );
 
-    const handleInvitationEditClick = useCallback(() => {}, []);
+    const handleInvitationEditClick = useCallback(() => {
+        editHandler(invitation);
+    }, [invitation, editHandler]);
 
     const handleInvitationDeleteClick = useCallback(
         (e: React.MouseEvent) => {

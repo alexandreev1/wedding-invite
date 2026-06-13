@@ -30,6 +30,7 @@ interface WeddingState {
 
     // Экшен для RSVP (со стороны гостя)
     updateRSVP: (token: string | undefined, status: boolean) => Promise<void>;
+    updateGuests: (token: string, guests: IGuest[]) => Promise<void>;
 
     setIsPair: (currInvitation: IInvitation | undefined) => void;
 
@@ -199,6 +200,18 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
         try {
             await api.patch(`/update-invitation/${token}`, { isRSVP: status });
             await get().getInvitation(token);
+        } catch (error) {
+            console.error('Не удалось обновить приглашение: ', error);
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    updateGuests: async (token, guests) => {
+        set({ isLoading: true });
+        try {
+            await api.patch(`/update-invitation/${token}`, { guests: guests });
+            await get().fetchInvitations();
         } catch (error) {
             console.error('Не удалось обновить приглашение: ', error);
         } finally {

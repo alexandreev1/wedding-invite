@@ -24,7 +24,10 @@ app.use(cookieParser());
 const connectionString = process.env.DATABASE_URL;
 const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  log: ["query", "info", "warn", "error"],
+  adapter,
+});
 
 app.post("/api/admin/login", (req, res) => {
   const { pin } = req.body;
@@ -108,14 +111,60 @@ app.patch("/api/guests/:id", async (req, res) => {
 
 app.patch("/api/update-invitation/:token", async (req, res) => {
   const { token } = req.params;
+  const { guests } = req.body;
   try {
+    const transactionRes = await prisma.$transaction(async (tx) => {
+      const invitation = await tx.invitation.findUnique({
+        where: { token },
+        select: { id: true },
+      });
+
+      if (!invitation) {
+        return res.status(404).json({ error: "Не найдено" });
+      }
+
+      const preparedGuests = guests.map((g: Record<string, unknown>) => ({
+        ...g,
+        invitationId: invitation.id,
+      }));
+
+      await tx.guest.createMany({
+        data: preparedGuests,
+        skipDuplicates: true,
+      });
+
+      for (const guest of preparedGuests) {
+        await tx.guest.update({
+          where: { id: guest.id },
+          data: guest,
+        });
+      }
+
+      const incomingIds = preparedGuests.map(
+        (g: Record<string, unknown>) => g.id,
+      );
+      await tx.guest.deleteMany({
+        where: {
+          invitationId: invitation.id,
+          id: { notIn: incomingIds },
+        },
+      });
+
+      return await tx.invitation.findUnique({
+        where: { token },
+        include: { guests: true },
+      });
+    });
+
+    return res.json(transactionRes);
+    /* 
     const updatedInvitation = await prisma.invitation.update({
       where: { token },
       data: { ...req.body },
     });
-    res.json(updatedInvitation);
+    res.json(updatedInvitation); */
   } catch (error) {
-    res.status(500).json({ error: "Не удалось обновить приглашение" });
+    res.status(500).json({ error });
   }
 });
 

@@ -4,11 +4,11 @@ import { Modal, AppShell, Burger, Group, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { useWeddingStore } from '../store/useWeddingStore';
-import { DroppableTable } from '../components/DroppableTable';
+import { Table } from './Table';
 import TableEditor from '../components/TableEditor';
-import CreateInvitationForm from '../components/CreateInivitationForm';
+import InvitationForm from './InvitationForm';
 import { TABLES } from '../shared/constants';
-import type { IGuest, ITable } from '../types/wedding';
+import type { IGuest, IInvitation, ITable } from '../types/wedding';
 import InvitationListItem from './InvitationListItem';
 
 const SittingPlan = () => {
@@ -16,9 +16,12 @@ const SittingPlan = () => {
     const [sideBarOpened, { toggle: toggleSidebar }] = useDisclosure();
 
     const [activeId, setActiveId] = useState<string | null>(null);
+    const [editingInvitation, setEditingInvitation] = useState<IInvitation | null>(null);
     const [selectedTableForSeating, setSelectedTableForSeating] = useState<number | null>(null);
     const [tableEditing, { open: openTable, close: closeTable }] = useDisclosure(false);
     const [invitationCreating, { open: openInvitationCreating, close: closeInvitationCreating }] =
+        useDisclosure(false);
+    const [invitationEditing, { open: openInvitationEditing, close: closeInvitationEditing }] =
         useDisclosure(false);
 
     const allGuests = useWeddingStore(
@@ -64,6 +67,11 @@ const SittingPlan = () => {
         [allGuests, activeId],
     );
 
+    const handleInvitationEditClick = useCallback((editingInvitation: IInvitation) => {
+        setEditingInvitation(editingInvitation);
+        openInvitationEditing();
+    }, []);
+
     if (!invitations) {
         return null;
     }
@@ -86,13 +94,28 @@ const SittingPlan = () => {
                         onClose={closeInvitationCreating}
                         centered
                     >
-                        <CreateInvitationForm />
+                        <InvitationForm closeFormCallback={closeInvitationCreating} />
                     </Modal>
                 </Group>
                 <div className="space-y-3 overflow-y-auto">
                     {invitations.map((invitation) => (
-                        <InvitationListItem invitation={invitation} />
+                        <InvitationListItem
+                            key={invitation.id}
+                            invitation={invitation}
+                            editHandler={handleInvitationEditClick}
+                        />
                     ))}
+                    <Modal
+                        title="Редактировать приглашение"
+                        opened={invitationEditing}
+                        onClose={closeInvitationEditing}
+                        centered
+                    >
+                        <InvitationForm
+                            invitation={editingInvitation}
+                            closeFormCallback={closeInvitationEditing}
+                        />
+                    </Modal>
                 </div>
             </AppShell.Navbar>
             <AppShell.Main
@@ -117,7 +140,7 @@ const SittingPlan = () => {
                     {/* Ряд А (Левый) */}
                     <div className="flex flex-col gap-1">
                         {TABLES.filter((t) => t.id <= 5).map((table) => (
-                            <DroppableTable
+                            <Table
                                 key={table.id}
                                 table={table}
                                 seatedGuests={allGuests.filter((g) => g.tableId === table.id)}
@@ -128,7 +151,7 @@ const SittingPlan = () => {
                     {/* Ряд Б (Правый) */}
                     <div className="flex flex-col gap-1">
                         {TABLES.filter((t) => t.id >= 6).map((table) => (
-                            <DroppableTable
+                            <Table
                                 key={table.id}
                                 table={table}
                                 seatedGuests={allGuests.filter((g) => g.tableId === table.id)}

@@ -1,33 +1,23 @@
-import { memo, useCallback, useState, type SyntheticEvent } from 'react';
+import { memo, useCallback, useLayoutEffect, useState, type SyntheticEvent } from 'react';
 import { useForm } from '@mantine/form';
 import { Switch, Text, TextInput, Group, Button } from '@mantine/core';
-import type { IGuest, TGender } from '../types/wedding';
+import type { IGuest, IInvitationFormProps } from '../types/wedding';
 import { useWeddingStore } from '../store/useWeddingStore';
-import { getAvatarUrl, getToken } from '../shared/utils';
-import GenderSwitch from './CreateInvitationForm/GenderSwitch';
+import { getFormInitialData, getInitialGuestInfo, getToken } from '../shared/utils';
+import GenderSwitch from './InvitationForm/GenderSwitch';
 
-function CreateInvitationForm() {
-    const { addInvitation } = useWeddingStore();
+function InvitationForm({ invitation, closeFormCallback }: IInvitationFormProps) {
+    const { addInvitation, updateGuests } = useWeddingStore();
     const [isPair, setIsPair] = useState(false);
     const form = useForm({
         mode: 'uncontrolled',
-        initialValues: {
-            firstGuestName: '',
-            firstGuestLastname: '',
-            firstGuestComment: '',
-            firstGuestPhoto: '',
-            firstGuestGender: 'male' as TGender,
-            secondGuestName: '',
-            secondGuestLastname: '',
-            secondGuestComment: '',
-            secondGuestPhoto: '',
-            secondGuestGender: 'female' as TGender,
-        },
+        initialValues: getFormInitialData(invitation),
         validate: {
-            firstGuestName: (value) => (value ? null : 'Требуется значение!'),
-            firstGuestLastname: (value) => (value ? null : 'Требуется значение!'),
-            secondGuestName: (value) => (!isPair || value ? null : 'Требуется значение!'),
-            secondGuestLastname: (value) => (!isPair || value ? null : 'Требуется значение!'),
+            firstGuestName: (value: string) => (value ? null : 'Требуется значение!'),
+            firstGuestLastname: (value: string) => (value ? null : 'Требуется значение!'),
+            secondGuestName: (value: string) => (!isPair || value ? null : 'Требуется значение!'),
+            secondGuestLastname: (value: string) =>
+                !isPair || value ? null : 'Требуется значение!',
         },
     });
 
@@ -47,35 +37,65 @@ function CreateInvitationForm() {
 
     const handleFormSubmit = useCallback(
         async (values: typeof form.values) => {
-            const invitationId = crypto.randomUUID();
-            const guests: IGuest[] = [
-                {
-                    id: crypto.randomUUID(),
-                    invitationId: invitationId,
+            const guests: IGuest[] = [];
+
+            if (invitation) {
+                const [guest1, guest2] = invitation.guests;
+
+                guests.push({
+                    ...guest1,
                     name: values.firstGuestName?.trim(),
                     lastname: values.firstGuestLastname?.trim(),
                     comment: values.firstGuestComment?.trim(),
                     gender: values.firstGuestGender,
-                    avatarUrl: getAvatarUrl(values.firstGuestName), // Если нет фото, берем Boring Avatars
-                    tableId: null,
-                    seatNumber: null,
-                    formResult: null,
-                },
-            ];
+                });
+
+                const secondGuest =
+                    guest2 ||
+                    getInitialGuestInfo({
+                        invitationId: invitation.id,
+                        name: values.secondGuestName?.trim(),
+                        lastname: values.secondGuestLastname?.trim(),
+                        comment: values.secondGuestComment?.trim(),
+                        gender: values.secondGuestGender,
+                    });
+
+                if (isPair) {
+                    guests.push({
+                        ...secondGuest,
+                        name: values.secondGuestName?.trim(),
+                        lastname: values.secondGuestLastname?.trim(),
+                        comment: values.secondGuestComment?.trim(),
+                        gender: values.secondGuestGender,
+                    });
+                }
+
+                await updateGuests(invitation.token, guests);
+                return closeFormCallback();
+            }
+
+            const invitationId = crypto.randomUUID();
+
+            guests.push(
+                getInitialGuestInfo({
+                    invitationId,
+                    name: values.firstGuestName?.trim(),
+                    lastname: values.firstGuestLastname?.trim(),
+                    comment: values.firstGuestComment?.trim(),
+                    gender: values.firstGuestGender,
+                }),
+            );
 
             if (isPair) {
-                guests.push({
-                    id: crypto.randomUUID(),
-                    invitationId: invitationId,
-                    name: values.secondGuestName?.trim(),
-                    lastname: values.secondGuestLastname?.trim(),
-                    comment: values.secondGuestComment?.trim(),
-                    gender: values.secondGuestGender,
-                    avatarUrl: getAvatarUrl(values.secondGuestName),
-                    tableId: null,
-                    seatNumber: null,
-                    formResult: null,
-                });
+                guests.push(
+                    getInitialGuestInfo({
+                        invitationId,
+                        name: values.secondGuestName?.trim(),
+                        lastname: values.secondGuestLastname?.trim(),
+                        comment: values.secondGuestComment?.trim(),
+                        gender: values.secondGuestGender,
+                    }),
+                );
             }
 
             await addInvitation({
@@ -85,11 +105,16 @@ function CreateInvitationForm() {
                 isRSVP: false,
             });
 
-            form.reset();
-            setIsPair(false);
+            return closeFormCallback();
         },
-        [isPair, addInvitation],
+        [isPair, addInvitation, closeFormCallback, invitation],
     );
+
+    useLayoutEffect(() => {
+        if (invitation) {
+            setIsPair(invitation.guests.length > 1);
+        }
+    }, [invitation]);
 
     return (
         <form onSubmit={form.onSubmit(handleFormSubmit)} className="p-6">
@@ -106,6 +131,7 @@ function CreateInvitationForm() {
                     }}
                 />
                 <TextInput
+                    className="w-full"
                     label="Имя"
                     placeholder="Василий"
                     key={form.key('firstGuestName')}
@@ -113,6 +139,7 @@ function CreateInvitationForm() {
                     {...form.getInputProps('firstGuestName')}
                 />
                 <TextInput
+                    className="w-full"
                     label="Фамилия"
                     placeholder="Барбашев"
                     key={form.key('firstGuestLastname')}
@@ -120,6 +147,7 @@ function CreateInvitationForm() {
                     {...form.getInputProps('firstGuestLastname')}
                 />
                 <TextInput
+                    className="w-full"
                     label="Комментарий"
                     placeholder="Друг со стороны жениха"
                     key={form.key('firstGuestComment')}
@@ -136,6 +164,7 @@ function CreateInvitationForm() {
                         }}
                     />
                     <TextInput
+                        className="w-full"
                         label="Имя"
                         placeholder="Ольга"
                         key={form.key('secondGuestName')}
@@ -143,6 +172,7 @@ function CreateInvitationForm() {
                         {...form.getInputProps('secondGuestName')}
                     />
                     <TextInput
+                        className="w-full"
                         label="Фамилия"
                         placeholder="Барбашева"
                         key={form.key('secondGuestLastname')}
@@ -150,6 +180,7 @@ function CreateInvitationForm() {
                         {...form.getInputProps('secondGuestLastname')}
                     />
                     <TextInput
+                        className="w-full"
                         label="Комментарий"
                         placeholder="Подруга со стороный жениха, жена Васи"
                         key={form.key('secondGuestComment')}
@@ -158,10 +189,10 @@ function CreateInvitationForm() {
                 </Group>
             )}
             <Group justify="flex-end">
-                <Button type="submit">Создать</Button>
+                <Button type="submit">{invitation ? 'Изменить' : 'Создать'}</Button>
             </Group>
         </form>
     );
 }
 
-export default memo(CreateInvitationForm);
+export default memo(InvitationForm);
