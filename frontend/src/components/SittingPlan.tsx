@@ -137,20 +137,8 @@ const SittingPlan = () => {
                     </div>
                 </div>
                 <div className="flex h-full gap-6">
-                    {/* Ряд А (Левый) */}
-                    <div className="flex flex-col gap-1">
-                        {TABLES.filter((t) => t.id <= 5).map((table) => (
-                            <Table
-                                key={table.id}
-                                table={table}
-                                seatedGuests={allGuests.filter((g) => g.tableId === table.id)}
-                                onClick={handleTableClick}
-                            />
-                        ))}
-                    </div>
-                    {/* Ряд Б (Правый) */}
-                    <div className="flex flex-col gap-1">
-                        {TABLES.filter((t) => t.id >= 6).map((table) => (
+                    <div className="flex gap-1">
+                        {TABLES.map((table) => (
                             <Table
                                 key={table.id}
                                 table={table}

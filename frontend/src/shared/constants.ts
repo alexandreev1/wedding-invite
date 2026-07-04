@@ -1,16 +1,6 @@
 export const TABLES = [
-    // Ряд А
-    { id: 1, name: 'Стол 1', maxSeats: 4 },
-    { id: 2, name: 'Стол 2', maxSeats: 4 },
-    { id: 3, name: 'Стол 3', maxSeats: 4 },
-    { id: 4, name: 'Стол 4', maxSeats: 4 },
-    { id: 5, name: 'Стол 5', maxSeats: 4 },
-    // Ряд Б
-    { id: 6, name: 'Стол 6', maxSeats: 4 },
-    { id: 7, name: 'Стол 7', maxSeats: 4 },
-    { id: 8, name: 'Стол 8', maxSeats: 4 },
-    { id: 9, name: 'Стол 9', maxSeats: 4 },
-    { id: 10, name: 'Стол 10', maxSeats: 4 },
+    { id: 1, name: 'Стол 1', maxSeats: 16 },
+    { id: 2, name: 'Стол 2', maxSeats: 20 },
 ];
 
 export const LOCATIONS_INFO = {

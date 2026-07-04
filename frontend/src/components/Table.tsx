@@ -11,22 +11,28 @@ export const Table = ({
     seatedGuests: IGuest[];
     onClick: (id: ITable['id']) => void;
 }) => {
-    const handleRootClick = useCallback(() => onClick(table.id), [table]);
+    const handleRootClick = useCallback(() => onClick(table.id), [onClick, table.id]);
 
     return (
         <div className="flex gap-1 cursor-pointer" onClick={handleRootClick}>
             <div className="flex flex-col justify-evenly">
-                <MiniSeat guest={seatedGuests.find((g) => g.seatNumber === 1)} />
-                <MiniSeat guest={seatedGuests.find((g) => g.seatNumber === 1)} />
+                {Array(table.maxSeats / 2)
+                    .fill(null)
+                    .map(() => {
+                        return <MiniSeat guest={seatedGuests.find((g) => g.seatNumber === 1)} />;
+                    })}
             </div>
-            <div className="h-24 w-12 bg-white border border-stone-300 rounded-md flex items-center justify-center">
+            <div className="h-96 w-12 bg-white border border-stone-300 rounded-md flex items-center justify-center">
                 <Text className="h-min" size="xs" span>
                     {table.id}
                 </Text>
             </div>
             <div className="flex flex-col justify-evenly">
-                <MiniSeat guest={seatedGuests.find((g) => g.seatNumber === 1)} />
-                <MiniSeat guest={seatedGuests.find((g) => g.seatNumber === 1)} />
+                {Array(table.maxSeats / 2)
+                    .fill(null)
+                    .map(() => {
+                        return <MiniSeat guest={seatedGuests.find((g) => g.seatNumber === 1)} />;
+                    })}
             </div>
         </div>
     );

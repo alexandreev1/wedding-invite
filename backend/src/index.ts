@@ -1,8 +1,11 @@
-import express from "express";
+ import express from "express";
 import cors from "cors";
 import pg from "pg";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import multer from "multer";
+import path from "node:path";
+import fs from "node:fs";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
@@ -21,12 +24,38 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Настройка подключения
-const connectionString = process.env.DATABASE_URL;
+const connectionString = process.env.DATABASE_URL || `postgresql://user:password@localhost:5432/wedding_db`;
 const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({
   log: ["query", "info", "warn", "error"],
   adapter,
+});
+
+// Папка для загруженных файлов (в dev — backend/uploads, т.к. cwd = backend)
+const uploadsDir = path.resolve(process.cwd(), "uploads");
+fs.mkdirSync(uploadsDir, { recursive: true });
+
+// Раздаём загруженные файлы как статику
+app.use("/uploads", express.static(uploadsDir));
+
+// multer: сохраняем на диск, принимаем только изображения, лимит 5 МБ
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, uploadsDir),
+    filename: (_req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase();
+      cb(null, `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`);
+    },
+  }),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (/^image\/(jpe?g|png|gif|webp)$/.test(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Допускаются только изображения (jpg, png, gif, webp)"));
+    }
+  },
 });
 
 app.post("/api/admin/login", (req, res) => {
@@ -58,6 +87,20 @@ const adminAuth = (req: any, res: any, next: any) => {
     res.status(403).json({ error: "Access denied" });
   }
 };
+
+// Загрузка файла (изображения). Возвращает публичный URL, который ложится в avatarUrl гостя.
+// Поле формы — "file". Доступ ограничен админкой (adminAuth).
+app.post("/api/upload", adminAuth, (req, res) => {
+  upload.single("file")(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: "Файл не передан" });
+    }
+    res.json({ url: `/uploads/${req.file.filename}` });
+  });
+});
 
 // Получить все приглашения (с вложенными гостями)
 app.get("/api/invitations", adminAuth, async (req, res) => {
@@ -157,7 +200,7 @@ app.patch("/api/update-invitation/:token", async (req, res) => {
     });
 
     return res.json(transactionRes);
-    /* 
+    /*
     const updatedInvitation = await prisma.invitation.update({
       where: { token },
       data: { ...req.body },

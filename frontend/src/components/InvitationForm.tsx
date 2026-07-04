@@ -3,8 +3,9 @@ import { useForm } from '@mantine/form';
 import { Switch, Text, TextInput, Group, Button } from '@mantine/core';
 import type { IGuest, IInvitationFormProps } from '../types/wedding';
 import { useWeddingStore } from '../store/useWeddingStore';
-import { getFormInitialData, getInitialGuestInfo, getToken } from '../shared/utils';
+import { getAvatarUrl, getFormInitialData, getInitialGuestInfo, getToken } from '../shared/utils';
 import GenderSwitch from './InvitationForm/GenderSwitch';
+import PhotoUpload from './InvitationForm/PhotoUpload';
 
 function InvitationForm({ invitation, closeFormCallback }: IInvitationFormProps) {
     const { addInvitation, updateGuests } = useWeddingStore();
@@ -48,6 +49,7 @@ function InvitationForm({ invitation, closeFormCallback }: IInvitationFormProps)
                     lastname: values.firstGuestLastname?.trim(),
                     comment: values.firstGuestComment?.trim(),
                     gender: values.firstGuestGender,
+                    avatarUrl: values.firstGuestPhoto || guest1.avatarUrl,
                 });
 
                 const secondGuest =
@@ -67,6 +69,7 @@ function InvitationForm({ invitation, closeFormCallback }: IInvitationFormProps)
                         lastname: values.secondGuestLastname?.trim(),
                         comment: values.secondGuestComment?.trim(),
                         gender: values.secondGuestGender,
+                        avatarUrl: values.secondGuestPhoto || secondGuest.avatarUrl,
                     });
                 }
 
@@ -76,26 +79,30 @@ function InvitationForm({ invitation, closeFormCallback }: IInvitationFormProps)
 
             const invitationId = crypto.randomUUID();
 
-            guests.push(
-                getInitialGuestInfo({
+            guests.push({
+                ...getInitialGuestInfo({
                     invitationId,
                     name: values.firstGuestName?.trim(),
                     lastname: values.firstGuestLastname?.trim(),
                     comment: values.firstGuestComment?.trim(),
                     gender: values.firstGuestGender,
                 }),
-            );
+                avatarUrl: values.firstGuestPhoto || getAvatarUrl(values.firstGuestName?.trim() || ''),
+            });
 
             if (isPair) {
-                guests.push(
-                    getInitialGuestInfo({
+                guests.push({
+                    ...getInitialGuestInfo({
                         invitationId,
                         name: values.secondGuestName?.trim(),
                         lastname: values.secondGuestLastname?.trim(),
                         comment: values.secondGuestComment?.trim(),
                         gender: values.secondGuestGender,
                     }),
-                );
+                    avatarUrl:
+                        values.secondGuestPhoto ||
+                        getAvatarUrl(values.secondGuestName?.trim() || ''),
+                });
             }
 
             await addInvitation({
@@ -153,6 +160,10 @@ function InvitationForm({ invitation, closeFormCallback }: IInvitationFormProps)
                     key={form.key('firstGuestComment')}
                     {...form.getInputProps('firstGuestComment')}
                 />
+                <PhotoUpload
+                    value={form.values.firstGuestPhoto}
+                    onUpload={(url) => form.setFieldValue('firstGuestPhoto', url)}
+                />
             </Group>
             {isPair && (
                 <Group align="center" mb="lg" gap={4}>
@@ -185,6 +196,10 @@ function InvitationForm({ invitation, closeFormCallback }: IInvitationFormProps)
                         placeholder="Подруга со стороный жениха, жена Васи"
                         key={form.key('secondGuestComment')}
                         {...form.getInputProps('secondGuestComment')}
+                    />
+                    <PhotoUpload
+                        value={form.values.secondGuestPhoto}
+                        onUpload={(url) => form.setFieldValue('secondGuestPhoto', url)}
                     />
                 </Group>
             )}
