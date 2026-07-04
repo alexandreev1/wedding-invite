@@ -33,7 +33,7 @@ const prisma = new PrismaClient({
 });
 
 // Папка для загруженных файлов (в dev — backend/uploads, т.к. cwd = backend)
-const uploadsDir = path.resolve(process.cwd(), "uploads");
+const uploadsDir = path.resolve("/uploads");
 fs.mkdirSync(uploadsDir, { recursive: true });
 
 // Раздаём загруженные файлы как статику
