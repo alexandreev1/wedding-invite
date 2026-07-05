@@ -33,13 +33,13 @@ const prisma = new PrismaClient({
 });
 
 // Папка для загруженных файлов (в dev — backend/uploads, т.к. cwd = backend)
-const uploadsDir = path.resolve("/uploads");
+const uploadsDir = path.resolve(process.cwd(), "uploads");
 fs.mkdirSync(uploadsDir, { recursive: true });
 
 // Раздаём загруженные файлы как статику
 app.use("/uploads", express.static(uploadsDir));
 
-// multer: сохраняем на диск, принимаем только изображения, лимит 5 МБ
+// multer: сохраняем на диск, принимаем только изображения, лимит 10 МБ
 const upload = multer({
   storage: multer.diskStorage({
     destination: (_req, _file, cb) => cb(null, uploadsDir),

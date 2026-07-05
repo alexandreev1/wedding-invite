@@ -9,7 +9,7 @@ services:
       - ADMIN_PIN=0309
       - IS_DOCKER=true
     volumes:
-      - /mnt/safe-volume-1/applications/wedding/uploads:/uploads
+      - /mnt/safe-volume-1/applications/wedding/uploads:/app/uploads
 
   frontend:
     image: registry.exz-vps.ru/alexioll-group/wedding-invite/frontend
