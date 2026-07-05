@@ -14,7 +14,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173", // Разрешаем фронтенду доступ
+    origin: "*", // Разрешаем фронтенду доступ
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "x-admin-pin"],
     credentials: true,
@@ -37,7 +37,7 @@ const uploadsDir = path.resolve(process.cwd(), "uploads");
 fs.mkdirSync(uploadsDir, { recursive: true });
 
 // Раздаём загруженные файлы как статику
-app.use("/api/uploads", express.static(uploadsDir));
+app.use("/uploads", express.static(uploadsDir));
 
 // multer: сохраняем на диск, принимаем только изображения, лимит 10 МБ
 const upload = multer({
