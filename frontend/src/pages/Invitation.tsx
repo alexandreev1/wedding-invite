@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
@@ -15,6 +15,7 @@ import Button from '../components/Button';
 
 const GuestInvite = () => {
     const { token } = useParams();
+    const navigate = useNavigate();
     const { getInvitation, updateRSVP, currentInvitation, isPair, firstGuest, secondGuest } =
         useWeddingStore();
 
@@ -29,9 +30,13 @@ const GuestInvite = () => {
         window.open('https://t.me/francheskamay', '_blanc', 'noopener,noreferrer');
     }, []);
 
-    const handleSitiingPlanButtonClick = useCallback(() => {
-        // asd
-    }, []);
+    const handleSitiingPlanButtonClick = useCallback(async () => {
+        if (!currentInvitation) {
+            return;
+        }
+
+        await navigate(`/plan/${currentInvitation.id}`);
+    }, [currentInvitation]);
 
     const handleRSVPButtonClick = useCallback(async () => {
         if (!isRSVP === false) {
@@ -191,14 +196,7 @@ const GuestInvite = () => {
                 <span className="InvitationContent__fifthSection-caption">
                     Нажав на кнопку ниже можно узнать своё место в зале
                 </span>
-                <span className="InvitationContent__fifthSection-caption_feature">
-                    Скоро здесь появится план рассадки. Следите за обновлениями ;)
-                </span>
-                <Button
-                    caption="посмотреть план"
-                    onButtonClick={handleSitiingPlanButtonClick}
-                    disabled
-                />
+                <Button caption="посмотреть план" onButtonClick={handleSitiingPlanButtonClick} />
             </div>
             <div className="InvitationContent__sixthSection">
                 {!isRSVP && (
