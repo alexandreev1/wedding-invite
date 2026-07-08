@@ -100,3 +100,7 @@ export interface IInvitationFormProps {
     invitation?: IInvitation | null;
     closeFormCallback: () => void;
 }
+
+export interface IBasePlanProps {
+    onSeatClick(): (seatNumber: number) => void;
+}

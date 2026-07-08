@@ -34,6 +34,11 @@ interface WeddingState {
 
     setIsPair: (currInvitation: IInvitation | undefined) => void;
 
+    fetchUnseatedGuests: () => Promise<void>;
+    fetchSeatedGuests: () => Promise<void>;
+    unseatedGuests: IGuest[] | null;
+    seatedGuests: IGuest[] | null;
+
     isLoading: boolean;
     isAdmin: boolean;
     isPair: boolean;
@@ -48,6 +53,8 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
     isLoading: false,
     isAdmin: false,
     isPair: false,
+    seatedGuests: null,
+    unseatedGuests: null,
     setIsPair: (currInvitation) => {
         if (!currInvitation) {
             return;
@@ -56,6 +63,30 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
     },
     firstGuest: null,
     secondGuest: null,
+
+    fetchSeatedGuests: async () => {
+        set({ isLoading: true });
+        try {
+            const res = await api.get('/seatedGuests');
+            set({ seatedGuests: res.data });
+        } catch (error) {
+            console.error('Ошибка получения гостей:', error);
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    fetchUnseatedGuests: async () => {
+        set({ isLoading: true });
+        try {
+            const res = await api.get('/unseatedGuests');
+            set({ unseatedGuests: res.data });
+        } catch (error) {
+            console.error('Ошибка получения гостей:', error);
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 
     // Загрузка данных из БД при старте приложения
     fetchInvitations: async () => {
@@ -152,15 +183,10 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
     updateGuestSeat: async (guestId, tableId, seatNumber) => {
         set({ isLoading: true });
         try {
-            // 1. Отправляем запрос
             await api.patch(`/guests/${guestId}`, { tableId, seatNumber });
-
-            // 2. Вместо ручного поиска в массиве просто перекачиваем данные из БД
-            // get() — это функция Zustand для доступа к методам внутри стора
-            await get().fetchInvitations();
+            await get().fetchSeatedGuests();
         } catch (error) {
             alert('Не удалось добавить гостя на стол. Данные будут откачены.');
-            await get().fetchInvitations(); // Откатываем UI к состоянию базы
         } finally {
             set({ isLoading: false });
         }
@@ -173,10 +199,9 @@ export const useWeddingStore = create<WeddingState>((set, get) => ({
                 tableId: null,
                 seatNumber: null,
             });
-            await get().fetchInvitations();
+            await get().fetchSeatedGuests();
         } catch (error) {
             alert('Не удалось удалить гостя со стола. Данные будут откачены.');
-            await get().fetchInvitations(); // Откатываем UI к состоянию базы
         } finally {
             set({ isLoading: false });
         }

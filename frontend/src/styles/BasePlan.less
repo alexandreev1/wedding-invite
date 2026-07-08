@@ -1,0 +1,37 @@
+.BasePlan {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+
+    @media (max-width: 768px) {
+        gap: 40px;
+    }
+
+    &__editMode {
+        @media (min-width: 768px) {
+            padding-left: 350px;
+        }
+    }
+
+    &__mainTable {
+        width: 400px;
+        height: 100px;
+
+        @media (max-width: 768px) {
+            width: 300px;
+            height: 80px;
+        }
+    }
+
+    &__tables {
+        gap: 48px;
+
+        @media (max-width: 768px) {
+            gap: 20px;
+        }
+    }
+}

@@ -1,4 +1,4 @@
- import express from "express";
+import express from "express";
 import cors from "cors";
 import pg from "pg";
 import dotenv from "dotenv";
@@ -8,6 +8,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { NullTypes } from "@prisma/client/runtime/client";
 
 dotenv.config();
 
@@ -24,7 +25,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Настройка подключения
-const connectionString = process.env.DATABASE_URL || `postgresql://user:password@localhost:5432/wedding_db`;
+const connectionString =
+  process.env.DATABASE_URL ||
+  `postgresql://user:password@localhost:5432/wedding_db`;
 const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({
@@ -107,7 +110,29 @@ app.get("/api/invitations", adminAuth, async (req, res) => {
   const invitations = await prisma.invitation.findMany({
     include: { guests: true },
   });
-  res.json(invitations);
+  res.json(invitations || []);
+});
+
+app.get("/api/unseatedGuests", async (req, res) => {
+  const unseatedGuests = await prisma.guest.findMany({
+    where: {
+      seatNumber: {
+        equals: null,
+      },
+    },
+  });
+  res.json(unseatedGuests || []);
+});
+
+app.get("/api/seatedGuests", async (req, res) => {
+  const seatedGuests = await prisma.guest.findMany({
+    where: {
+      seatNumber: {
+        not: null,
+      },
+    },
+  });
+  res.json(seatedGuests || []);
 });
 
 // Создать новое приглашение

@@ -10,6 +10,7 @@ import NotFound from './pages/NotFound';
 import GuestForm from './pages/GuestForm';
 import { FullScreenLoader } from './shared/ui/Spinner';
 import { ProtectedRoute } from './shared/ui/ProtectedRoute';
+import PlanForGuests from './pages/PlanForGuests';
 
 function App() {
     return (
@@ -53,6 +54,14 @@ function App() {
                         <MantineProvider>
                             <Notifications />
                             <GuestForm />
+                        </MantineProvider>
+                    }
+                />
+                <Route
+                    path="/plan/:id"
+                    element={
+                        <MantineProvider defaultColorScheme="light">
+                            <PlanForGuests />
                         </MantineProvider>
                     }
                 />
