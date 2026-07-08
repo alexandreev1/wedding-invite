@@ -63,11 +63,16 @@
         position: relative;
         overflow: hidden;
 
-        &-caption {
+        &-captionWrapper {
             position: absolute;
             bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &-caption {
             border-radius: 12px;
             background-color: #f0f0f094;
             padding: 6px 12px;

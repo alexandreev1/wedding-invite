@@ -141,8 +141,10 @@ export const Table = ({
                         fit="cover"
                         onClick={closeGuestPhoto}
                     />
-                    <div className="Table__photoModal-caption">
-                        <Text>{`${activeGuestForModal?.lastname} ${activeGuestForModal?.name}`}</Text>
+                    <div className="Table__photoModal-captionWrapper">
+                        <div className="Table__photoModal-caption">
+                            <Text>{`${activeGuestForModal?.lastname} ${activeGuestForModal?.name}`}</Text>
+                        </div>
                     </div>
                 </div>
             </Modal>
@@ -189,7 +191,7 @@ const Seat = ({
                 <img
                     src={guest.avatarUrl}
                     alt={guest.name}
-                    className="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all"
+                    className="w-full h-full object-cover rounded-full transition-all"
                 />
             </button>
         </div>
